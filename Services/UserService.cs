@@ -1,4 +1,4 @@
-﻿using ltl_webdev.Dto;
+﻿using ltl_webdev.Dtos;
 using ltl_webdev.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -41,13 +41,13 @@ namespace ltl_webdev.Services
         }
         public async Task<User> GetByNameAsync(string name)
         {
-            User user = await _context.Users.FirstOrDefaultAsync(user => user.Name.Equals(name));
+            User user = await _context.Users.Include(user => user.Roles).FirstOrDefaultAsync(user => user.Name.Equals(name));
 
             return user;
         }
         public async Task<User> GetByEmailAsync(string email)
         {
-            User user = await _context.Users.FirstOrDefaultAsync(user => user.Email.Equals(email));
+            User user = await _context.Users.Include(user => user.Roles).FirstOrDefaultAsync(user => user.Email.Equals(email));
 
             return user;
         }

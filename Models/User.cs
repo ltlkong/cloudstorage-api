@@ -3,8 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace ltl_webdev.Models
 {
@@ -22,6 +21,7 @@ namespace ltl_webdev.Models
         [Required]
         [MaxLength(300)]
         public string Email { get; set; }
+        [JsonIgnore]
         [Required]
         public string PasswordHash { get; set; }
         public byte[] Avatar { get; set; }
