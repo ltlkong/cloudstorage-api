@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace ltl_webdev.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
@@ -24,6 +24,7 @@ namespace ltl_webdev.Controllers
             _logger = logger;
         }
         [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Confirmed")]
         [HttpGet]
         public object Get()
         {

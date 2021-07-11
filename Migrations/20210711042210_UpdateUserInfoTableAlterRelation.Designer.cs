@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ltl_webdev.Models;
 
 namespace ltl_webdev.Migrations
 {
     [DbContext(typeof(WebDevDbContext))]
-    partial class WebDevDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210711042210_UpdateUserInfoTableAlterRelation")]
+    partial class UpdateUserInfoTableAlterRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -9,7 +9,7 @@ using ltl_webdev.Models;
 namespace ltl_webdev.Migrations
 {
     [DbContext(typeof(WebDevDbContext))]
-    [Migration("20210710042112_Initial")]
+    [Migration("20210711041416_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -60,6 +60,9 @@ namespace ltl_webdev.Migrations
                     b.Property<byte[]>("Avatar")
                         .HasColumnType("varbinary(4000)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime");
+
                     b.Property<string>("DisplayName")
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
@@ -68,9 +71,6 @@ namespace ltl_webdev.Migrations
                         .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("varchar(300)");
-
-                    b.Property<bool>("IsConfirmed")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -81,6 +81,9 @@ namespace ltl_webdev.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("UserInfoId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
@@ -89,12 +92,15 @@ namespace ltl_webdev.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
+                    b.HasIndex("UserInfoId");
+
                     b.ToTable("User");
                 });
 
             modelBuilder.Entity("ltl_webdev.Models.UserInfo", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
@@ -103,11 +109,11 @@ namespace ltl_webdev.Migrations
                     b.Property<string>("Introduction")
                         .HasColumnType("text");
 
-                    b.Property<bool>("IsVip")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<int>("Reputation")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime");
 
                     b.HasKey("Id");
 
@@ -129,19 +135,12 @@ namespace ltl_webdev.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ltl_webdev.Models.UserInfo", b =>
-                {
-                    b.HasOne("ltl_webdev.Models.User", "User")
-                        .WithOne("UserInfo")
-                        .HasForeignKey("ltl_webdev.Models.UserInfo", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("ltl_webdev.Models.User", b =>
                 {
+                    b.HasOne("ltl_webdev.Models.UserInfo", "UserInfo")
+                        .WithMany()
+                        .HasForeignKey("UserInfoId");
+
                     b.Navigation("UserInfo");
                 });
 #pragma warning restore 612, 618

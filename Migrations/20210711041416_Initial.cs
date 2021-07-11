@@ -22,6 +22,22 @@ namespace ltl_webdev.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserInfo",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Reputation = table.Column<int>(type: "int", nullable: false),
+                    Introduction = table.Column<string>(type: "text", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserInfo", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "User",
                 columns: table => new
                 {
@@ -32,11 +48,18 @@ namespace ltl_webdev.Migrations
                     Email = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false),
                     PasswordHash = table.Column<string>(type: "text", nullable: false),
                     Avatar = table.Column<byte[]>(type: "varbinary(4000)", nullable: true),
-                    IsConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false),
+                    UserInfoId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_User", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_User_UserInfo_UserInfoId",
+                        column: x => x.UserInfoId,
+                        principalTable: "UserInfo",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -58,27 +81,6 @@ namespace ltl_webdev.Migrations
                     table.ForeignKey(
                         name: "FK_RoleUser_User_UsersId",
                         column: x => x.UsersId,
-                        principalTable: "User",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserInfo",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    IsVip = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    Reputation = table.Column<int>(type: "int", nullable: false),
-                    Introduction = table.Column<string>(type: "text", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserInfo", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserInfo_User_Id",
-                        column: x => x.Id,
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -106,6 +108,11 @@ namespace ltl_webdev.Migrations
                 table: "User",
                 column: "Name",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_User_UserInfoId",
+                table: "User",
+                column: "UserInfoId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -114,13 +121,13 @@ namespace ltl_webdev.Migrations
                 name: "RoleUser");
 
             migrationBuilder.DropTable(
-                name: "UserInfo");
-
-            migrationBuilder.DropTable(
                 name: "Role");
 
             migrationBuilder.DropTable(
                 name: "User");
+
+            migrationBuilder.DropTable(
+                name: "UserInfo");
         }
     }
 }

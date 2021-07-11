@@ -5,6 +5,7 @@ namespace ltl_webdev.Models
     public class WebDevDbContext : DbContext
     {
         public DbSet<User> Users { get; set; }
+        public DbSet<UserInfo> UserInfos { get; set; }
         public WebDevDbContext(DbContextOptions<WebDevDbContext> options) : base(options)
         {
 

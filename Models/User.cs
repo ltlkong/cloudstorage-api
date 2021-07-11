@@ -26,8 +26,7 @@ namespace ltl_webdev.Models
         public string PasswordHash { get; set; }
         public byte[] Avatar { get; set; }
         [Required]
-        public bool IsConfirmed { get; set; }
-        public UserInfo UserInfo { get; set; }
+        public DateTime CreatedAt { get; set; }
         public ICollection<Role> Roles { get; set; }
         public User()
         {
@@ -37,17 +36,18 @@ namespace ltl_webdev.Models
     [Table("UserInfo")]
     public class UserInfo
     {
+        [JsonIgnore]
         [ForeignKey("User")]
-        public int Id { get; set; }
-        [Required]
-        public bool IsVip { get; set; }
-        
+        public int Id { get; set; }     
         [Required]
         [Range(0, 100)]
         public int Reputation { get; set; }
         public string Introduction { get; set; }
         [Required]
         public DateTime CreatedAt { get; set; }
+        [Required]
+        public DateTime UpdatedAt { get; set; }
+        [JsonIgnore]
         public User User { get; set; }
     }
 

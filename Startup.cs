@@ -12,10 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -32,6 +29,16 @@ namespace ltl_webdev
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options => {
+                options.AddPolicy("AllowCors", builder =>
+                {
+                    builder
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+                });
+            });
+
             services.AddAuthentication(auth =>
             {
                 auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -60,9 +67,14 @@ namespace ltl_webdev
                 options.UseMySQL(Configuration.GetConnectionString("Default"));
             });
 
-            services.AddScoped<UserService>();
-
             services.AddSingleton(new JwtService(Configuration.GetValue<string>("JwtSigninKey")));
+
+            services.AddScoped<AuthService>();
+
+            services.AddScoped<UserService>();
+           
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,6 +90,8 @@ namespace ltl_webdev
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("AllowCors");
 
             app.UseAuthentication();
 
