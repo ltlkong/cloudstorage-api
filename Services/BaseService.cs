@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ltl_webdev.Models;
+using ltl_codeplatform.Models;
 
-namespace ltl_webdev.Services
+namespace ltl_codeplatform.Services
 {
     public class BaseService
     {

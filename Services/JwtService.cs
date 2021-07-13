@@ -7,7 +7,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ltl_webdev.Services
+namespace ltl_codeplatform.Services
 {
     public class JwtService
     {

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ltl_webdev.Controllers
+namespace ltl_codeplatform.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -23,8 +23,6 @@ namespace ltl_webdev.Controllers
         {
             _logger = logger;
         }
-        [Authorize(Roles ="Admin")]
-        [Authorize(Roles = "Confirmed")]
         [HttpGet]
         public object Get()
         {

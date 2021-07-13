@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ltl_webdev
+namespace ltl_codeplatform
 {
     public class Program
     {

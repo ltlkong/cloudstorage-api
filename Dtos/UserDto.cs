@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ltl_webdev.Dtos
+namespace ltl_codeplatform.Dtos
 {
     public class UserDto
     {

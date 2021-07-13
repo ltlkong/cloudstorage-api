@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace ltl_webdev.Models
+namespace ltl_codeplatform.Models
 {
     public class WebDevDbContext : DbContext
     {

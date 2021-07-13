@@ -1,11 +1,11 @@
-﻿using ltl_webdev.Dtos;
-using ltl_webdev.Models;
+﻿using ltl_codeplatform.Dtos;
+using ltl_codeplatform.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ltl_webdev.Services
+namespace ltl_codeplatform.Services
 {
     public class UserService : BaseService
     {
@@ -13,7 +13,7 @@ namespace ltl_webdev.Services
         {
         }
 
-        public async Task CreateInfo(int userId ,UserDto userDto)
+        public async Task CreateInfoAsync(int userId ,UserDto userDto)
         {
             UserInfo userInfo = new UserInfo()
             {
@@ -28,6 +28,10 @@ namespace ltl_webdev.Services
 
             await _context.UserInfos.AddAsync(userInfo);
             await _context.SaveChangesAsync();
+        }
+        public async Task UpdateInfoAsync()
+        {
+
         }
     }
 }

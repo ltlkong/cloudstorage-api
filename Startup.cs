@@ -1,5 +1,5 @@
-using ltl_webdev.Models;
-using ltl_webdev.Services;
+using ltl_codeplatform.Models;
+using ltl_codeplatform.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,7 +16,7 @@ using System.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace ltl_webdev
+namespace ltl_codeplatform
 {
     public class Startup
     {

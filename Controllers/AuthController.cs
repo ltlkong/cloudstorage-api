@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ltl_webdev.Models;
-using ltl_webdev.Services;
-using ltl_webdev.Dtos;
+using ltl_codeplatform.Models;
+using ltl_codeplatform.Services;
+using ltl_codeplatform.Dtos;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
-namespace ltl_webdev.Controllers
+namespace ltl_codeplatform.Controllers
 {
     [Route("[controller]")]
     [ApiController]
@@ -33,16 +35,13 @@ namespace ltl_webdev.Controllers
 
             try
             {
-                await _authService.CreateAsync(loginDto);
+                await _authService.RegisterAsync(loginDto);
             } catch
             {
-                var descriptor = new ValidationProblemDetails();
-                descriptor.Detail = "Name or Email has been registered already.";
-
-                return ValidationProblem(descriptor);
+                return ValidationProblem();
             }
 
-            return Ok(new { msg = "Registered successfully.", name = loginDto.Name });
+            return CreatedAtAction("Register",new { msg = "Registered successfully.", name = loginDto.Name });
         }
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginDto)
@@ -79,9 +78,26 @@ namespace ltl_webdev.Controllers
         {
             // Get user and information.
             User user = GetCurrentUser();
-            UserInfo userInfo = await _context.UserInfos.FindAsync(user.Id);
 
-            return Ok(new { msg = "Your infomation", user, userInfo });
+            return Ok(new { msg = "Your infomation", user });
+        }
+        [HttpPost("email")]
+        public async Task<IActionResult> GetEmail(string email)
+        {
+            // Check is email in the database
+            User user = await _context.Users.FirstOrDefaultAsync(user => user.Email.ToLower().Equals(email.ToLower()));
+   
+            if (user != null)
+            {
+                var descriptor = new ValidationProblemDetails(new Dictionary<string,string[]>(){
+                    {"Email", new string[]{"isOccupied" } }
+                });
+                descriptor.Detail = "Name or Email has been registered already.";
+   
+                return ValidationProblem(descriptor);
+            }
+               
+            return Ok(new { msg = "The email is valid", email });
         }
     }
     

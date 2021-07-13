@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using MySql.EntityFrameworkCore.Metadata;
 
-namespace ltl_webdev.Migrations
+namespace ltl_codeplatform.Migrations
 {
     public partial class Initial : Migration
     {

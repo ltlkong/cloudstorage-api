@@ -1,6 +1,6 @@
 using System;
 
-namespace ltl_webdev
+namespace ltl_codeplatform
 {
     public class WeatherForecast
     {

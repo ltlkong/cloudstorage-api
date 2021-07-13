@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ltl_webdev.Models;
+using ltl_codeplatform.Models;
 
-namespace ltl_webdev.Migrations
+namespace ltl_codeplatform.Migrations
 {
     [DbContext(typeof(WebDevDbContext))]
     [Migration("20210711041416_Initial")]

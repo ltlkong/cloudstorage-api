@@ -1,6 +1,6 @@
-﻿using ltl_webdev.Dtos;
-using ltl_webdev.Models;
-using ltl_webdev.Services;
+﻿using ltl_codeplatform.Dtos;
+using ltl_codeplatform.Models;
+using ltl_codeplatform.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ltl_webdev.Controllers
+namespace ltl_codeplatform.Controllers
 {
     [Authorize]
     [Route("[controller]")]
@@ -24,19 +24,20 @@ namespace ltl_webdev.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
             // Get user and information.
             User user = GetCurrentUser();
+            UserInfo userInfo = await _context.UserInfos.FindAsync(user.Id);
 
-            return Ok(new { msg="Your infomation" ,user});
+            return Ok(new { msg="Your infomation" ,user, userInfo});
         }
         [HttpPost("createinfo")]
         public async Task<IActionResult> CreateInfo(UserDto userDto)
         {
             try
             {
-                await _userService.CreateInfo(GetCurrentUser().Id,userDto);
+                await _userService.CreateInfoAsync(GetCurrentUser().Id,userDto);
             }
             catch
             {

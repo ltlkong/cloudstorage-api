@@ -1,5 +1,5 @@
-﻿using ltl_webdev.Dtos;
-using ltl_webdev.Models;
+﻿using ltl_codeplatform.Dtos;
+using ltl_codeplatform.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 
-namespace ltl_webdev.Services
+namespace ltl_codeplatform.Services
 {
     public class AuthService : BaseService
     {
@@ -17,7 +17,7 @@ namespace ltl_webdev.Services
         {
         }
 
-        public async Task CreateAsync(LoginDto loginDto)
+        public async Task RegisterAsync(LoginDto loginDto)
         {
             User user = new User
             {

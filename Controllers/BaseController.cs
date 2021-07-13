@@ -1,11 +1,11 @@
-﻿using ltl_webdev.Models;
+﻿using ltl_codeplatform.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 
-namespace ltl_webdev.Controllers
+namespace ltl_codeplatform.Controllers
 {
     public class BaseController : ControllerBase
     {
