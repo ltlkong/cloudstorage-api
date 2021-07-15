@@ -1,4 +1,4 @@
-﻿using ltl_codeplatform.Models;
+﻿using ltl_pf.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ltl_codeplatform.Controllers
+namespace ltl_pf.Controllers
 {
     [Authorize(Roles ="Admin")]
     [Route("[controller]")]
     [ApiController]
     public class AdminController : BaseController
     {
-        public AdminController(WebDevDbContext context) : base(context)
+        public AdminController(PFDbContext context) : base(context)
         {
         }
 

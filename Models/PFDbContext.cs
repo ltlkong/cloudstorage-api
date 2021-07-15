@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace ltl_codeplatform.Models
+namespace ltl_pf.Models
 {
-    public class WebDevDbContext : DbContext
+    public class PFDbContext : DbContext
     {
         public DbSet<User> Users { get; set; }
         public DbSet<UserInfo> UserInfos { get; set; }
-        public WebDevDbContext(DbContextOptions<WebDevDbContext> options) : base(options)
+        public PFDbContext(DbContextOptions<PFDbContext> options) : base(options)
         {
 
         }

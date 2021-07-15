@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ltl_codeplatform.Models;
+using ltl_pf.Models;
 
-namespace ltl_codeplatform.Services
+namespace ltl_pf.Services
 {
     public class BaseService
     {
-        protected readonly WebDevDbContext _context;
-        public BaseService(WebDevDbContext context)
+        protected readonly PFDbContext _context;
+        public BaseService(PFDbContext context)
         {
             _context = context;
         }

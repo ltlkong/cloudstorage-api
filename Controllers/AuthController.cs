@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ltl_codeplatform.Models;
-using ltl_codeplatform.Services;
-using ltl_codeplatform.Dtos;
+using ltl_pf.Models;
+using ltl_pf.Services;
+using ltl_pf.Dtos;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
-namespace ltl_codeplatform.Controllers
+namespace ltl_pf.Controllers
 {
     [Route("[controller]")]
     [ApiController]
@@ -19,7 +19,7 @@ namespace ltl_codeplatform.Controllers
     {
         private readonly JwtService _jwtService;
         private readonly AuthService _authService;
-        public AuthController(WebDevDbContext context, AuthService authService, JwtService jwtService) : base(context)
+        public AuthController(PFDbContext context, AuthService authService, JwtService jwtService) : base(context)
         {
             _jwtService = jwtService;
             _authService = authService;

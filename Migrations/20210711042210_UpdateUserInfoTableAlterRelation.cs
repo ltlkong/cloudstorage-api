@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 using MySql.EntityFrameworkCore.Metadata;
 
-namespace ltl_codeplatform.Migrations
+namespace ltl_pf.Migrations
 {
     public partial class UpdateUserInfoTableAlterRelation : Migration
     {

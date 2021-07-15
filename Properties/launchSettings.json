@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "ltl_webdev": {
+    "ltl_pf": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",

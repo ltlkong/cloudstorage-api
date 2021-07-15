@@ -1,5 +1,5 @@
-using ltl_codeplatform.Models;
-using ltl_codeplatform.Services;
+using ltl_pf.Models;
+using ltl_pf.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,7 +16,7 @@ using System.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace ltl_codeplatform
+namespace ltl_pf
 {
     public class Startup
     {
@@ -60,10 +60,10 @@ namespace ltl_codeplatform
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ltl_webdev", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ltl_pf", Version = "v1" });
             });
 
-            services.AddDbContext<WebDevDbContext>(options => {
+            services.AddDbContext<PFDbContext>(options => {
                 options.UseMySQL(Configuration.GetConnectionString("Default"));
             });
 

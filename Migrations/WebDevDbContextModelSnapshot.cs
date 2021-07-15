@@ -3,11 +3,11 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ltl_codeplatform.Models;
+using ltl_pf.Models;
 
-namespace ltl_codeplatform.Migrations
+namespace ltl_pf.Migrations
 {
-    [DbContext(typeof(WebDevDbContext))]
+    [DbContext(typeof(PFDbContext))]
     partial class WebDevDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

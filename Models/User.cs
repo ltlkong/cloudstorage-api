@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace ltl_codeplatform.Models
+namespace ltl_pf.Models
 {
     [Table("User")]
     [Index(nameof(Name), IsUnique = true)]

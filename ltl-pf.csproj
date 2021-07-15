@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <RootNamespace>ltl_codeplatform</RootNamespace>
+    <RootNamespace>ltl_pf</RootNamespace>
     <UserSecretsId>9a3f00db-46d6-427a-8381-c09819211826</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>.</DockerfileContext>

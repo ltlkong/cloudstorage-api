@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ltl_codeplatform.Models;
+using ltl_pf.Models;
 
-namespace ltl_codeplatform.Migrations
+namespace ltl_pf.Migrations
 {
-    [DbContext(typeof(WebDevDbContext))]
+    [DbContext(typeof(PFDbContext))]
     [Migration("20210711042210_UpdateUserInfoTableAlterRelation")]
     partial class UpdateUserInfoTableAlterRelation
     {

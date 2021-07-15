@@ -1,16 +1,16 @@
-﻿using ltl_codeplatform.Models;
+﻿using ltl_pf.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 
-namespace ltl_codeplatform.Controllers
+namespace ltl_pf.Controllers
 {
     public class BaseController : ControllerBase
     {
-        protected readonly WebDevDbContext _context;
-        public BaseController(WebDevDbContext context)
+        protected readonly PFDbContext _context;
+        public BaseController(PFDbContext context)
         {
             _context = context;
         }
