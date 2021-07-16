@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ltl_pf.Models;
 
 namespace ltl_pf.Migrations
 {
     [DbContext(typeof(PFDbContext))]
-    partial class WebDevDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210715142336_CreateMembershipTable")]
+    partial class CreateMembershipTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,13 +40,13 @@ namespace ltl_pf.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Color")
-                        .HasColumnType("text");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(600)
                         .HasColumnType("varchar(600)");
+
+                    b.Property<byte[]>("Icon")
+                        .HasColumnType("varbinary(4000)");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");

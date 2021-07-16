@@ -6,6 +6,7 @@ namespace ltl_pf.Models
     {
         public DbSet<User> Users { get; set; }
         public DbSet<UserInfo> UserInfos { get; set; }
+        public DbSet<Membership> Memberships { get; set; }
         public PFDbContext(DbContextOptions<PFDbContext> options) : base(options)
         {
 

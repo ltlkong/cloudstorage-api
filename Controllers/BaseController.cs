@@ -26,7 +26,8 @@ namespace ltl_pf.Controllers
             var securityToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
             //Get user
             int userId = Int32.Parse(securityToken.Issuer);
-            User user = _context.Users.Include(user => user.Roles).FirstOrDefault(user => user.Id==userId);            
+            User user = _context.Users.Include(user => user.Roles).Include(user => user.Membership)
+                .FirstOrDefault(user => user.Id==userId);            
 
             return user;
         }

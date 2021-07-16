@@ -27,6 +27,7 @@ namespace ltl_pf.Models
         public byte[] Avatar { get; set; }
         [Required]
         public DateTime CreatedAt { get; set; }
+        public Membership Membership { get; set; }
         public ICollection<Role> Roles { get; set; }
         public User()
         {

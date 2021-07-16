@@ -37,7 +37,7 @@ namespace ltl_pf.Services
             prop = WordFirstCharToUpper(prop);
             string[] invalidProps =
             {
-                "Avatar","CreatedAt","UpdatedAt"
+                "Id","Avatar","CreatedAt","UpdatedAt",
             };
            
 
