@@ -37,10 +37,9 @@ namespace ltl_pf.Services
             prop = WordFirstCharToUpper(prop);
             string[] invalidProps =
             {
-                "Id","Avatar","CreatedAt","UpdatedAt",
+                "Id","Avatar","CreatedAt","UpdatedAt","Membership"
             };
            
-
             UserInfo userInfo = await _context.UserInfos.FindAsync(currentUser.Id);
 
             if (invalidProps.Contains(prop))
@@ -88,7 +87,6 @@ namespace ltl_pf.Services
             }
 
             userInfo.UpdatedAt = DateTime.Now;
-
             await _context.SaveChangesAsync();
 
             return true;

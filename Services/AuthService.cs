@@ -22,6 +22,7 @@ namespace ltl_pf.Services
             User user = new User
             {
                 Name = loginDto.Name,
+                DisplayName=loginDto.Name,
                 Email = loginDto.Email,
             };
 
@@ -51,7 +52,8 @@ namespace ltl_pf.Services
         }
         public async Task<User> GetByEmailAsync(string email)
         {
-            User user = await _context.Users.Include(user => user.Roles).FirstOrDefaultAsync(user => user.Email.Equals(email));
+            User user = await _context.Users.Include(user => user.Roles)
+                .FirstOrDefaultAsync(user => user.Email.Equals(email));
 
             return user;
         }

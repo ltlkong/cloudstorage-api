@@ -51,8 +51,14 @@ namespace ltl_pf.Controllers
             if (!IsCorrectPwd)
                 return ValidationProblem();
 
-            User user = await _authService.GetByNameAsync(loginDto.Name)
-                ?? await _authService.GetByEmailAsync(loginDto.Email);
+            User user = await _authService.GetByEmailAsync(loginDto.Email);
+
+            if (user == null)
+                return BadRequest(new { message = "Some errors happened." });
+
+            // Update last login time
+            user.lastLoginAt = DateTime.Now;
+            await _context.SaveChangesAsync();
 
             // Claim user
             var claims = new List<Claim>();
@@ -70,34 +76,56 @@ namespace ltl_pf.Controllers
             string token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
             DateTime expiration = jwtToken.ValidTo;
 
-            return Ok(new { msg="Signed in successfully.", name=user.Email, token, expiration });
+            return Ok(new { msg="Signed in successfully.", email=user.Email, token, expiration });
         }
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetUser()
+        public IActionResult GetUser()
         {
             // Get user and information.
             User user = GetCurrentUser();
+            string membershipColor = user.Membership?.Color;
 
-            return Ok(new { msg = "Your infomation", user });
-        }
-        [HttpPost("email")]
-        public async Task<IActionResult> GetEmail(string email)
-        {
-            // Check is email in the database
-            User user = await _context.Users.FirstOrDefaultAsync(user => user.Email.ToLower().Equals(email.ToLower()));
-   
-            if (user != null)
+            var authUser = new
             {
-                var descriptor = new ValidationProblemDetails(new Dictionary<string,string[]>(){
-                    {"Email", new string[]{"isOccupied" } }
-                });
-                descriptor.Detail = "Name or Email has been registered already.";
-   
-                return ValidationProblem(descriptor);
+                name=user.Name,
+                displayName=user.DisplayName,
+                membershipColor=membershipColor,
+                roles=user.Roles
+            };
+
+            return Ok(new { msg = "Your infomation", user=authUser });
+        }
+        [HttpPost("check")]
+        public async Task<IActionResult> Check(string email, string name)
+        {
+            List<string> invalidData = new List<string>();
+
+            if (email != null)
+            {
+                if (!_authService.ValidateEmail(email))
+                    invalidData.Add("email");
+
+                // Check is email in the database
+                User user = await _authService.GetByEmailAsync(email);
+
+                if (user != null)
+                    invalidData.Add("email");
+
             }
-               
-            return Ok(new { msg = "The email is valid", email });
+            if (name != null)
+            {
+                // Check is email in the database
+                User user = await _authService.GetByNameAsync(name);
+
+                if (user != null)
+                    invalidData.Add("name");
+            }
+
+            if (email == null && name == null)
+                return BadRequest();
+
+            return Ok(new { msg="These data are invalid.", invalidData });
         }
     }
     
