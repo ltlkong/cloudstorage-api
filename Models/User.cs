@@ -25,7 +25,7 @@ namespace ltl_pf.Models
         [JsonIgnore]
         [Required]
         public string PasswordHash { get; set; }
-        public byte[] Avatar { get; set; }
+        public string Avatar { get; set; }
         [Required]
         public DateTime CreatedAt { get; set; }
         [Required]
@@ -53,6 +53,12 @@ namespace ltl_pf.Models
         public DateTime UpdatedAt { get; set; }
         [JsonIgnore]
         public User User { get; set; }
+        public ICollection<UserKnowTechnology> UserKnowTechnologies { get; set; }
+        public ICollection<Project> Projects { get; set; }
+        public UserInfo()
+        {
+            UserKnowTechnologies = new HashSet<UserKnowTechnology>();
+        }
     }
 
 }

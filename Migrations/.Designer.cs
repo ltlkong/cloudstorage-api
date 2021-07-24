@@ -2,35 +2,22 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ltl_pf.Models;
 
 namespace ltl_pf.Migrations
 {
     [DbContext(typeof(PFDbContext))]
-    partial class WebDevDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210724201127_UpdateTechnologyTableChangeRelation")]
+    partial class UpdateTechnologyTableChangeRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
                 .HasAnnotation("ProductVersion", "5.0.7");
-
-            modelBuilder.Entity("ProjectUserInfo", b =>
-                {
-                    b.Property<int>("ProjectsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsersId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProjectsId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("ProjectUserInfo");
-                });
 
             modelBuilder.Entity("RoleUser", b =>
                 {
@@ -73,34 +60,6 @@ namespace ltl_pf.Migrations
                     b.ToTable("Membership");
                 });
 
-            modelBuilder.Entity("ltl_pf.Models.Project", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<double>("Budget")
-                        .HasColumnType("double");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(3000)
-                        .HasColumnType("varchar(3000)");
-
-                    b.Property<int>("Duration")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsInProgress")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(150)
-                        .HasColumnType("varchar(150)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Project");
-                });
-
             modelBuilder.Entity("ltl_pf.Models.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -118,36 +77,14 @@ namespace ltl_pf.Migrations
                     b.ToTable("Role");
                 });
 
-            modelBuilder.Entity("ltl_pf.Models.Technology", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("varchar(500)");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("Technology");
-                });
-
             modelBuilder.Entity("ltl_pf.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Avatar")
-                        .HasColumnType("text");
+                    b.Property<byte[]>("Avatar")
+                        .HasColumnType("varbinary(4000)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime");
@@ -212,45 +149,6 @@ namespace ltl_pf.Migrations
                     b.ToTable("UserInfo");
                 });
 
-            modelBuilder.Entity("ltl_pf.Models.UserKnowTechnology", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("Level")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TechnologyId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserInfoId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TechnologyId");
-
-                    b.HasIndex("UserInfoId");
-
-                    b.ToTable("UserKnowTechnology");
-                });
-
-            modelBuilder.Entity("ProjectUserInfo", b =>
-                {
-                    b.HasOne("ltl_pf.Models.Project", null)
-                        .WithMany()
-                        .HasForeignKey("ProjectsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ltl_pf.Models.UserInfo", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("RoleUser", b =>
                 {
                     b.HasOne("ltl_pf.Models.Role", null)
@@ -284,31 +182,6 @@ namespace ltl_pf.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ltl_pf.Models.UserKnowTechnology", b =>
-                {
-                    b.HasOne("ltl_pf.Models.Technology", "Technology")
-                        .WithMany("UserKnowTechnologies")
-                        .HasForeignKey("TechnologyId");
-
-                    b.HasOne("ltl_pf.Models.UserInfo", "UserInfo")
-                        .WithMany("UserKnowTechnologies")
-                        .HasForeignKey("UserInfoId");
-
-                    b.Navigation("Technology");
-
-                    b.Navigation("UserInfo");
-                });
-
-            modelBuilder.Entity("ltl_pf.Models.Technology", b =>
-                {
-                    b.Navigation("UserKnowTechnologies");
-                });
-
-            modelBuilder.Entity("ltl_pf.Models.UserInfo", b =>
-                {
-                    b.Navigation("UserKnowTechnologies");
                 });
 #pragma warning restore 612, 618
         }
