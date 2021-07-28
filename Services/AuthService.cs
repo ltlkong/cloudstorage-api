@@ -1,5 +1,5 @@
-﻿using ltl_pf.Dtos;
-using ltl_pf.Models;
+﻿using ltl_cloudstorage.Dtos;
+using ltl_cloudstorage.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 
-namespace ltl_pf.Services
+namespace ltl_cloudstorage.Services
 {
     public class AuthService : BaseService
     {

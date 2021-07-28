@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ltl_pf.Models;
+using ltl_cloudstorage.Models;
 
-namespace ltl_pf.Migrations
+namespace ltl_cloudstorage.Migrations
 {
     [DbContext(typeof(PFDbContext))]
-    [Migration("20210711041416_Initial")]
-    partial class Initial
+    [Migration("20210727050842_UpdateMembershipColorConstrain")]
+    partial class UpdateMembershipColorConstrain
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,7 +34,33 @@ namespace ltl_pf.Migrations
                     b.ToTable("RoleUser");
                 });
 
-            modelBuilder.Entity("ltl_webdev.Models.Role", b =>
+            modelBuilder.Entity("ltl_cloudstorage.Models.Membership", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Color")
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(150)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(600)
+                        .HasColumnType("varchar(600)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("double");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Membership");
+                });
+
+            modelBuilder.Entity("ltl_cloudstorage.Models.Role", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -51,19 +77,21 @@ namespace ltl_pf.Migrations
                     b.ToTable("Role");
                 });
 
-            modelBuilder.Entity("ltl_webdev.Models.User", b =>
+            modelBuilder.Entity("ltl_cloudstorage.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<byte[]>("Avatar")
-                        .HasColumnType("varbinary(4000)");
+                    b.Property<string>("Avatar")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime");
 
                     b.Property<string>("DisplayName")
+                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
@@ -71,6 +99,12 @@ namespace ltl_pf.Migrations
                         .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("varchar(300)");
+
+                    b.Property<DateTime>("LastLoginAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<int?>("MembershipId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -81,26 +115,22 @@ namespace ltl_pf.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("UserInfoId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
                         .IsUnique();
 
+                    b.HasIndex("MembershipId");
+
                     b.HasIndex("Name")
                         .IsUnique();
-
-                    b.HasIndex("UserInfoId");
 
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("ltl_webdev.Models.UserInfo", b =>
+            modelBuilder.Entity("ltl_cloudstorage.Models.UserInfo", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
@@ -122,26 +152,37 @@ namespace ltl_pf.Migrations
 
             modelBuilder.Entity("RoleUser", b =>
                 {
-                    b.HasOne("ltl_webdev.Models.Role", null)
+                    b.HasOne("ltl_cloudstorage.Models.Role", null)
                         .WithMany()
                         .HasForeignKey("RolesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ltl_webdev.Models.User", null)
+                    b.HasOne("ltl_cloudstorage.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ltl_webdev.Models.User", b =>
+            modelBuilder.Entity("ltl_cloudstorage.Models.User", b =>
                 {
-                    b.HasOne("ltl_webdev.Models.UserInfo", "UserInfo")
+                    b.HasOne("ltl_cloudstorage.Models.Membership", "Membership")
                         .WithMany()
-                        .HasForeignKey("UserInfoId");
+                        .HasForeignKey("MembershipId");
 
-                    b.Navigation("UserInfo");
+                    b.Navigation("Membership");
+                });
+
+            modelBuilder.Entity("ltl_cloudstorage.Models.UserInfo", b =>
+                {
+                    b.HasOne("ltl_cloudstorage.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

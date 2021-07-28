@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ltl_pf.Dtos
+namespace ltl_cloudstorage.Dtos
 {
     public class PropValueDto
     {

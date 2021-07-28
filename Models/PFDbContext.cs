@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace ltl_pf.Models
+namespace ltl_cloudstorage.Models
 {
     public class PFDbContext : DbContext
     {

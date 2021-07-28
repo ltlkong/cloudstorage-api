@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ltl_pf.Models;
+using ltl_cloudstorage.Models;
 
-namespace ltl_pf.Migrations
+namespace ltl_cloudstorage.Migrations
 {
     [DbContext(typeof(PFDbContext))]
-    [Migration("20210724201715_UpdateTechnologyTableAddedIndex")]
-    partial class UpdateTechnologyTableAddedIndex
+    [Migration("20210727035901_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,7 +34,7 @@ namespace ltl_pf.Migrations
                     b.ToTable("RoleUser");
                 });
 
-            modelBuilder.Entity("ltl_pf.Models.Membership", b =>
+            modelBuilder.Entity("ltl_cloudstorage.Models.Membership", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -60,7 +60,7 @@ namespace ltl_pf.Migrations
                     b.ToTable("Membership");
                 });
 
-            modelBuilder.Entity("ltl_pf.Models.Role", b =>
+            modelBuilder.Entity("ltl_cloudstorage.Models.Role", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -77,36 +77,15 @@ namespace ltl_pf.Migrations
                     b.ToTable("Role");
                 });
 
-            modelBuilder.Entity("ltl_pf.Models.Technology", b =>
+            modelBuilder.Entity("ltl_cloudstorage.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Avatar")
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("Technology");
-                });
-
-            modelBuilder.Entity("ltl_pf.Models.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<byte[]>("Avatar")
-                        .HasColumnType("varbinary(4000)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime");
@@ -121,6 +100,9 @@ namespace ltl_pf.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("varchar(300)");
 
+                    b.Property<DateTime>("LastLoginAt")
+                        .HasColumnType("datetime");
+
                     b.Property<int?>("MembershipId")
                         .HasColumnType("int");
 
@@ -132,9 +114,6 @@ namespace ltl_pf.Migrations
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<DateTime>("lastLoginAt")
-                        .HasColumnType("datetime");
 
                     b.HasKey("Id");
 
@@ -149,7 +128,7 @@ namespace ltl_pf.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("ltl_pf.Models.UserInfo", b =>
+            modelBuilder.Entity("ltl_cloudstorage.Models.UserInfo", b =>
                 {
                     b.Property<int>("Id")
                         .HasColumnType("int");
@@ -171,88 +150,39 @@ namespace ltl_pf.Migrations
                     b.ToTable("UserInfo");
                 });
 
-            modelBuilder.Entity("ltl_pf.Models.UserKnowTechnology", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("Level")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TechnologyId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserInfoId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TechnologyId");
-
-                    b.HasIndex("UserInfoId");
-
-                    b.ToTable("UserKnowTechnology");
-                });
-
             modelBuilder.Entity("RoleUser", b =>
                 {
-                    b.HasOne("ltl_pf.Models.Role", null)
+                    b.HasOne("ltl_cloudstorage.Models.Role", null)
                         .WithMany()
                         .HasForeignKey("RolesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ltl_pf.Models.User", null)
+                    b.HasOne("ltl_cloudstorage.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ltl_pf.Models.User", b =>
+            modelBuilder.Entity("ltl_cloudstorage.Models.User", b =>
                 {
-                    b.HasOne("ltl_pf.Models.Membership", "Membership")
+                    b.HasOne("ltl_cloudstorage.Models.Membership", "Membership")
                         .WithMany()
                         .HasForeignKey("MembershipId");
 
                     b.Navigation("Membership");
                 });
 
-            modelBuilder.Entity("ltl_pf.Models.UserInfo", b =>
+            modelBuilder.Entity("ltl_cloudstorage.Models.UserInfo", b =>
                 {
-                    b.HasOne("ltl_pf.Models.User", "User")
+                    b.HasOne("ltl_cloudstorage.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ltl_pf.Models.UserKnowTechnology", b =>
-                {
-                    b.HasOne("ltl_pf.Models.Technology", "Technology")
-                        .WithMany("UserKnowTechnologies")
-                        .HasForeignKey("TechnologyId");
-
-                    b.HasOne("ltl_pf.Models.UserInfo", "UserInfo")
-                        .WithMany("UserKnowTechnologies")
-                        .HasForeignKey("UserInfoId");
-
-                    b.Navigation("Technology");
-
-                    b.Navigation("UserInfo");
-                });
-
-            modelBuilder.Entity("ltl_pf.Models.Technology", b =>
-                {
-                    b.Navigation("UserKnowTechnologies");
-                });
-
-            modelBuilder.Entity("ltl_pf.Models.UserInfo", b =>
-                {
-                    b.Navigation("UserKnowTechnologies");
                 });
 #pragma warning restore 612, 618
         }

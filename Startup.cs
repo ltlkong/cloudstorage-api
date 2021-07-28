@@ -1,5 +1,5 @@
-using ltl_pf.Models;
-using ltl_pf.Services;
+using ltl_cloudstorage.Models;
+using ltl_cloudstorage.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,7 +16,7 @@ using System.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace ltl_pf
+namespace ltl_cloudstorage
 {
     public class Startup
     {

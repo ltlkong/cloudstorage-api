@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ltl_pf.Models;
-using ltl_pf.Services;
-using ltl_pf.Dtos;
+using ltl_cloudstorage.Models;
+using ltl_cloudstorage.Services;
+using ltl_cloudstorage.Dtos;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
-namespace ltl_pf.Controllers
+namespace ltl_cloudstorage.Controllers
 {
     [Route("[controller]")]
     [ApiController]
@@ -57,7 +57,7 @@ namespace ltl_pf.Controllers
                 return BadRequest(new { message = "Some errors happened." });
 
             // Update last login time
-            user.lastLoginAt = DateTime.Now;
+            user.LastLoginAt = DateTime.Now;
             await _context.SaveChangesAsync();
 
             // Claim user
@@ -91,12 +91,13 @@ namespace ltl_pf.Controllers
                 name=user.Name,
                 displayName=user.DisplayName,
                 membershipColor=membershipColor,
-                roles=user.Roles
+                roles=user.Roles,
+                avatar=user.Avatar
             };
 
             return Ok(new { msg = "Your infomation", user=authUser });
         }
-        [HttpPost("check")]
+        [HttpGet("check")]
         public async Task<IActionResult> Check(string email, string name)
         {
             List<string> invalidData = new List<string>();

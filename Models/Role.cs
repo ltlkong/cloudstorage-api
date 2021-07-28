@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace ltl_pf.Models
+namespace ltl_cloudstorage.Models
 {
     [Table("Role")]
     [Index(nameof(Name), IsUnique = true)]

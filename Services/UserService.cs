@@ -1,5 +1,5 @@
-﻿using ltl_pf.Dtos;
-using ltl_pf.Models;
+﻿using ltl_cloudstorage.Dtos;
+using ltl_cloudstorage.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace ltl_pf.Services
+namespace ltl_cloudstorage.Services
 {
     public class UserService : BaseService
     {
@@ -16,6 +16,12 @@ namespace ltl_pf.Services
         {
         }
 
+        public async Task<ICollection<User>> GetAll()
+        {
+            ICollection<User> users = await _context.Users.Include(user => user.Roles).ToListAsync();
+
+            return users;
+        }
         public async Task CreateInfoAsync(int userId ,UserDto userDto)
         {
             UserInfo userInfo = new UserInfo()
@@ -35,14 +41,14 @@ namespace ltl_pf.Services
         public async Task<bool> UpdateInfoAsync(User currentUser, string prop, string value)
         {
             prop = WordFirstCharToUpper(prop);
-            string[] invalidProps =
+            string[] editableProps =
             {
-                "Id","Avatar","CreatedAt","UpdatedAt","Membership"
+                "Description", "Email", "Name", "Reputation", "Introduction","DisplayName"
             };
            
             UserInfo userInfo = await _context.UserInfos.FindAsync(currentUser.Id);
 
-            if (invalidProps.Contains(prop))
+            if (!editableProps.Contains(prop))
                 throw new InvalidOperationException("Invalid property.");
 
             int nullCounter = 0;

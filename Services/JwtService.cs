@@ -7,7 +7,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ltl_pf.Services
+namespace ltl_cloudstorage.Services
 {
     public class JwtService
     {

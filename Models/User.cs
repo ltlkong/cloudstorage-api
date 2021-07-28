@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace ltl_pf.Models
+namespace ltl_cloudstorage.Models
 {
     [Table("User")]
     [Index(nameof(Name), IsUnique = true)]
@@ -25,11 +25,12 @@ namespace ltl_pf.Models
         [JsonIgnore]
         [Required]
         public string PasswordHash { get; set; }
+        [MaxLength(500)]
         public string Avatar { get; set; }
         [Required]
         public DateTime CreatedAt { get; set; }
         [Required]
-        public DateTime lastLoginAt { get; set; }
+        public DateTime LastLoginAt { get; set; }
         public Membership Membership { get; set; }
         public ICollection<Role> Roles { get; set; }
         public User()
@@ -53,12 +54,6 @@ namespace ltl_pf.Models
         public DateTime UpdatedAt { get; set; }
         [JsonIgnore]
         public User User { get; set; }
-        public ICollection<UserKnowTechnology> UserKnowTechnologies { get; set; }
-        public ICollection<Project> Projects { get; set; }
-        public UserInfo()
-        {
-            UserKnowTechnologies = new HashSet<UserKnowTechnology>();
-        }
     }
 
 }

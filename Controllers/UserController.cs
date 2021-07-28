@@ -1,6 +1,6 @@
-﻿using ltl_pf.Dtos;
-using ltl_pf.Models;
-using ltl_pf.Services;
+﻿using ltl_cloudstorage.Dtos;
+using ltl_cloudstorage.Models;
+using ltl_cloudstorage.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ltl_pf.Controllers
+namespace ltl_cloudstorage.Controllers
 {
     [Authorize]
     [Route("[controller]")]
