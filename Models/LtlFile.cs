@@ -7,14 +7,15 @@ using System.Threading.Tasks;
 
 namespace ltl_cloudstorage.Models
 {
-    public class Document
+    public class LtlFile
     {
-        public Document(string uniqueId, string name,string type, string path, int directoryId=1)
+        public LtlFile(string uniqueId, string name,string type, string path, long size, int directoryId=1)
         {
             UniqueId = uniqueId;
             Type = type;
             Name = name;
             Path = path;
+            Size = size;
             DirectoryId = directoryId;
         }
 
@@ -26,8 +27,9 @@ namespace ltl_cloudstorage.Models
         public string Path { get; set; }
         [MaxLength(40)]
         public string Type { get; set; }
+        public long Size { get; set; }
         [ForeignKey("Directory")]
         public int DirectoryId { get; set; }
-        public Directory Directory { get; set; }
+        public LtlDirectory Directory { get; set; }
     }
 }

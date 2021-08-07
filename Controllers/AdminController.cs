@@ -29,7 +29,7 @@ namespace ltl_cloudstorage.Controllers
         [HttpGet("users")]
         public async Task<IActionResult> GetUsers()
         {
-            ICollection<User> users = await _userService.GetAll();
+            ICollection<User> users = await _userService.GetAllAsync();
 
             return Ok(new { msg="All users", users});
         }

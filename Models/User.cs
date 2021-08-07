@@ -31,9 +31,11 @@ namespace ltl_cloudstorage.Models
         [Required]
         public DateTime LastLoginAt { get; set; }
         public Membership Membership { get; set; }
+        public int MembershipId { get; set; }
         public virtual ICollection<Role> Roles { get; set; }
         public User()
         {
+            CreatedAt = DateTime.Now;
             Roles = new HashSet<Role>();
         }
     }
@@ -53,6 +55,12 @@ namespace ltl_cloudstorage.Models
         public DateTime UpdatedAt { get; set; }
         [JsonIgnore]
         public User User { get; set; }
+        public virtual ICollection<LtlDirectory> LtlDirectories { get; set; }
+        public UserInfo()
+        {
+            CreatedAt = DateTime.Now;
+            LtlDirectories = new HashSet<LtlDirectory>();
+        }
     }
 
 }

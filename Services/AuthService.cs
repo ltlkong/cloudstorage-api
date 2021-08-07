@@ -26,9 +26,6 @@ namespace ltl_cloudstorage.Services
                 Email = loginDto.Email,
             };
 
-            // Default values
-            user.CreatedAt = DateTime.Now;
-
             // Set hashed password
             user.PasswordHash = Md5Encode(loginDto.Password);
 

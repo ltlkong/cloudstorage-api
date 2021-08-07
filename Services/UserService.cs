@@ -16,7 +16,7 @@ namespace ltl_cloudstorage.Services
         {
         }
 
-        public async Task<ICollection<User>> GetAll()
+        public async Task<ICollection<User>> GetAllAsync()
         {
             ICollection<User> users = await _context.Users.Include(user => user.Roles).ToListAsync();
 
@@ -31,7 +31,6 @@ namespace ltl_cloudstorage.Services
             };
 
             //Default values
-            userInfo.CreatedAt = DateTime.Now;
             userInfo.UpdatedAt = DateTime.Now;
             userInfo.Reputation = 50;
 

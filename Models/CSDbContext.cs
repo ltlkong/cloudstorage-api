@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace ltl_cloudstorage.Models
 {
@@ -7,8 +8,8 @@ namespace ltl_cloudstorage.Models
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserInfo> UserInfos { get; set; }
         public virtual DbSet<Membership> Memberships { get; set; }
-        public virtual DbSet<Directory> Directories { get; set; }
-        public virtual DbSet<Document> Documents { get; set; }
+        public virtual DbSet<LtlDirectory> LtlDirectories { get; set; }
+        public virtual DbSet<LtlFile> LtlFiles { get; set; }
         public CSDbContext(DbContextOptions<CSDbContext> options) : base(options)
         {
 
@@ -18,6 +19,80 @@ namespace ltl_cloudstorage.Models
         // {
         //     optionsBuilder.UseMySQL("server=localhost;database=WebDevDb;user=root;password=");
         // }
-        
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            this.SeedMemberships(builder);
+            this.SeedUsers(builder);
+        }
+
+        private void SeedMemberships(ModelBuilder builder)
+        {
+            Membership[] memberships = new Membership[]
+            {
+                new Membership()
+                {
+                    Id=1,
+                    Name = "Bronze",
+                    Color = "linear-gradient(90deg, rgb(195, 88, 43) 0%, rgb(255, 182, 117) 50%, rgb(195, 88, 43) 100%)",
+                    Description = "# Bronze",
+                    Price = 10
+                },
+
+                new Membership()
+                {
+                    Id=2,
+                    Name = "Silver",
+                    Color = "linear-gradient(90deg, rgba(151,150,149,1) 0%, rgba(210,210,210,1) 50%, rgba(151,150,149,1) 100%)",
+                    Description = "",
+                    Price = 15
+                },
+
+                new Membership()
+                {
+                    Id=3,
+                    Name = "Gold",
+                    Color = "linear-gradient(90deg, rgba(249,194,56,1) 0%, rgba(255,236,188,1) 50%, rgba(249,194,56,1) 100%)",
+                    Description = "",
+                    Price = 20
+                }
+            };
+
+            builder.Entity<Membership>().HasData(memberships);
+        }
+
+        private void SeedUsers(ModelBuilder builder)
+        {
+            User[] users = new User[]
+            {
+                new User()
+                {
+                    Id=1,
+                    Name = "ltl",
+                    DisplayName = "ltl",
+                    Email = "tielinli@yahoo.com",
+                    PasswordHash = "oIn5JKeGBFsnpRAekK4jTQ==",
+                    CreatedAt = DateTime.Parse("2021-07-26 23:00:48"),
+                    LastLoginAt = DateTime.Parse("2021-07-27 08:19:04"),
+                    MembershipId =2
+                },
+
+                new User()
+                {
+                    Id=2,
+                    Name = "LisaLee",
+                    DisplayName = "LisaLee",
+                    Email = "1248988727@qq.com",
+                    PasswordHash = "eMoP6zKEDM9eDMEYtFm4VA==",
+                    CreatedAt = DateTime.Parse("2021-07-27 07:11:41"),
+                    LastLoginAt = DateTime.Parse("2021-07-27 07:11:41"),
+                    MembershipId = 2
+                }
+            };
+
+            builder.Entity<User>().HasData(users);
+        }
+
     }
 }

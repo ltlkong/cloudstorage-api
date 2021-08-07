@@ -26,50 +26,14 @@ namespace ltl_cloudstorage.Controllers
 
         // GET: api/<StorageController>
         [HttpGet]
-        public async Task<IActionResult> Get(string name)
+        public async Task<IActionResult> Get(int id)
         {
-            
-            Byte[] b = await System.IO.File.ReadAllBytesAsync(System.IO.Directory.GetCurrentDirectory() + "/Storage/Images/"+name);
+            LtlFile file = await _storageService.GetFileByIdAsync(id);
+            Byte[] fileBytes = await _storageService.GetFileBytesAsync(file.Path);
+            string mimeType = _storageService.GetFileType(file.Name);
 
-            return File(b, "image/jpg");
+            return File(fileBytes, mimeType);
         }
-
-        // GET api/<StorageController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<StorageController>
-        //[HttpPost]
-        //public async Task<IActionResult> PostFile(List<IFormFile> files)
-        //{
-        //    long size = files.Sum(f => f.Length);
-
-        //    string filePath = null;
-        //    List<string> types = new List<string>();
-
-
-        //    foreach (var formFile in files)
-        //    {
-        //        if (formFile.Length > 0)
-        //        {
-        //            filePath = System.IO.Directory.GetCurrentDirectory() + "/Storage/Images/" + formFile.FileName;
-
-        //            types.Add(formFile.FileName);
-        //            using (var stream = System.IO.File.Create(filePath))
-        //            {
-        //                await formFile.CopyToAsync(stream);
-        //            }
-        //        }
-        //    }
-
-        //    // Process uploaded files
-        //    // Don't rely on or trust the FileName property without validation.
-
-        //    return Ok(new { count = files.Count, size, filePath, types });
-        //}
 
         [HttpPost]
         public async Task<IActionResult> PostFile(IFormFile file)
@@ -79,7 +43,7 @@ namespace ltl_cloudstorage.Controllers
 
             if (file.Length > 0)
             {
-                isSuccess = await _storageService.Store(file);
+                isSuccess = await _storageService.StoreAsync(file);
             }
 
             if (isSuccess)
