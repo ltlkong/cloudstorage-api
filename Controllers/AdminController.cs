@@ -21,7 +21,7 @@ namespace ltl_cloudstorage.Controllers
     public class AdminController : BaseController
     {
         private readonly UserService _userService;
-        public AdminController(PFDbContext context, UserService userService) : base(context)
+        public AdminController(CSDbContext context, UserService userService) : base(context)
         {
             _userService = userService;
         }

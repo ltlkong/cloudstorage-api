@@ -12,7 +12,7 @@ namespace ltl_cloudstorage.Services
 {
     public class UserService : BaseService
     {
-        public UserService(PFDbContext context) : base(context)
+        public UserService(CSDbContext context) : base(context)
         {
         }
 
@@ -98,7 +98,7 @@ namespace ltl_cloudstorage.Services
             return true;
         }
 
-        #region
+        #region helpers
         // Take a string split by white space. E.g. display name => DisplayName
         private string WordFirstCharToUpper(string str)
         {

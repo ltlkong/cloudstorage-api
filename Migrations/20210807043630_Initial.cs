@@ -9,19 +9,19 @@ namespace ltl_cloudstorage.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Membership",
+                name: "Memberships",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(type: "text", nullable: true),
-                    Color = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true),
+                    Color = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: true),
                     Description = table.Column<string>(type: "varchar(600)", maxLength: 600, nullable: false),
                     Price = table.Column<double>(type: "double", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Membership", x => x.Id);
+                    table.PrimaryKey("PK_Memberships", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -38,7 +38,7 @@ namespace ltl_cloudstorage.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "User",
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -54,13 +54,34 @@ namespace ltl_cloudstorage.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_User_Membership_MembershipId",
+                        name: "FK_Users_Memberships_MembershipId",
                         column: x => x.MembershipId,
-                        principalTable: "Membership",
+                        principalTable: "Memberships",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Directories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    UniqueId = table.Column<string>(type: "text", nullable: true),
+                    Name = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Directories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Directories_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -80,15 +101,15 @@ namespace ltl_cloudstorage.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RoleUser_User_UsersId",
+                        name: "FK_RoleUser_Users_UsersId",
                         column: x => x.UsersId,
-                        principalTable: "User",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserInfo",
+                name: "UserInfos",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false),
@@ -99,14 +120,46 @@ namespace ltl_cloudstorage.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserInfo", x => x.Id);
+                    table.PrimaryKey("PK_UserInfos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserInfo_User_Id",
+                        name: "FK_UserInfos_Users_Id",
                         column: x => x.Id,
-                        principalTable: "User",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Documents",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    UniqueId = table.Column<string>(type: "text", nullable: true),
+                    Name = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: true),
+                    Path = table.Column<string>(type: "text", nullable: true),
+                    DirectoryId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Documents", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Documents_Directories_DirectoryId",
+                        column: x => x.DirectoryId,
+                        principalTable: "Directories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Directories_UserId",
+                table: "Directories",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Documents_DirectoryId",
+                table: "Documents",
+                column: "DirectoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Role_Name",
@@ -120,19 +173,19 @@ namespace ltl_cloudstorage.Migrations
                 column: "UsersId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_User_Email",
-                table: "User",
+                name: "IX_Users_Email",
+                table: "Users",
                 column: "Email",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_User_MembershipId",
-                table: "User",
+                name: "IX_Users_MembershipId",
+                table: "Users",
                 column: "MembershipId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_User_Name",
-                table: "User",
+                name: "IX_Users_Name",
+                table: "Users",
                 column: "Name",
                 unique: true);
         }
@@ -140,19 +193,25 @@ namespace ltl_cloudstorage.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Documents");
+
+            migrationBuilder.DropTable(
                 name: "RoleUser");
 
             migrationBuilder.DropTable(
-                name: "UserInfo");
+                name: "UserInfos");
+
+            migrationBuilder.DropTable(
+                name: "Directories");
 
             migrationBuilder.DropTable(
                 name: "Role");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Membership");
+                name: "Memberships");
         }
     }
 }

@@ -7,7 +7,6 @@ using System.Text.Json.Serialization;
 
 namespace ltl_cloudstorage.Models
 {
-    [Table("User")]
     [Index(nameof(Name), IsUnique = true)]
     [Index(nameof(Email), IsUnique = true)]
     public class User
@@ -32,13 +31,13 @@ namespace ltl_cloudstorage.Models
         [Required]
         public DateTime LastLoginAt { get; set; }
         public Membership Membership { get; set; }
-        public ICollection<Role> Roles { get; set; }
+        public virtual ICollection<Role> Roles { get; set; }
         public User()
         {
             Roles = new HashSet<Role>();
         }
     }
-    [Table("UserInfo")]
+
     public class UserInfo
     {
         [JsonIgnore]

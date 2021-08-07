@@ -9,8 +9,8 @@ namespace ltl_cloudstorage.Controllers
 {
     public class BaseController : ControllerBase
     {
-        protected readonly PFDbContext _context;
-        public BaseController(PFDbContext context)
+        protected readonly CSDbContext _context;
+        public BaseController(CSDbContext context)
         {
             _context = context;
         }

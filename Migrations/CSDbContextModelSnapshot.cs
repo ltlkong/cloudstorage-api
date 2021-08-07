@@ -2,17 +2,15 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ltl_cloudstorage.Models;
 
 namespace ltl_cloudstorage.Migrations
 {
-    [DbContext(typeof(PFDbContext))]
-    [Migration("20210727050842_UpdateMembershipColorConstrain")]
-    partial class UpdateMembershipColorConstrain
+    [DbContext(typeof(CSDbContext))]
+    partial class CSDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,6 +30,59 @@ namespace ltl_cloudstorage.Migrations
                     b.HasIndex("UsersId");
 
                     b.ToTable("RoleUser");
+                });
+
+            modelBuilder.Entity("ltl_cloudstorage.Models.Directory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("UniqueId")
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Directories");
+                });
+
+            modelBuilder.Entity("ltl_cloudstorage.Models.Document", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("DirectoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)");
+
+                    b.Property<string>("Path")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .HasMaxLength(40)
+                        .HasColumnType("varchar(40)");
+
+                    b.Property<string>("UniqueId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DirectoryId");
+
+                    b.ToTable("Documents");
                 });
 
             modelBuilder.Entity("ltl_cloudstorage.Models.Membership", b =>
@@ -57,7 +108,7 @@ namespace ltl_cloudstorage.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Membership");
+                    b.ToTable("Memberships");
                 });
 
             modelBuilder.Entity("ltl_cloudstorage.Models.Role", b =>
@@ -125,7 +176,7 @@ namespace ltl_cloudstorage.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("User");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("ltl_cloudstorage.Models.UserInfo", b =>
@@ -147,7 +198,7 @@ namespace ltl_cloudstorage.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserInfo");
+                    b.ToTable("UserInfos");
                 });
 
             modelBuilder.Entity("RoleUser", b =>
@@ -163,6 +214,28 @@ namespace ltl_cloudstorage.Migrations
                         .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ltl_cloudstorage.Models.Directory", b =>
+                {
+                    b.HasOne("ltl_cloudstorage.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ltl_cloudstorage.Models.Document", b =>
+                {
+                    b.HasOne("ltl_cloudstorage.Models.Directory", "Directory")
+                        .WithMany("Documents")
+                        .HasForeignKey("DirectoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Directory");
                 });
 
             modelBuilder.Entity("ltl_cloudstorage.Models.User", b =>
@@ -183,6 +256,11 @@ namespace ltl_cloudstorage.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ltl_cloudstorage.Models.Directory", b =>
+                {
+                    b.Navigation("Documents");
                 });
 #pragma warning restore 612, 618
         }

@@ -63,7 +63,7 @@ namespace ltl_cloudstorage
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ltl_pf", Version = "v1" });
             });
 
-            services.AddDbContext<PFDbContext>(options => {
+            services.AddDbContext<CSDbContext>(options => {
                 options.UseMySQL(Configuration.GetConnectionString("Default"));
             });
 
@@ -72,6 +72,8 @@ namespace ltl_cloudstorage
             services.AddScoped<AuthService>();
 
             services.AddScoped<UserService>();
+
+            services.AddScoped<StorageService>();
            
 
             

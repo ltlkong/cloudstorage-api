@@ -19,7 +19,7 @@ namespace ltl_cloudstorage.Controllers
     {
         private readonly JwtService _jwtService;
         private readonly AuthService _authService;
-        public AuthController(PFDbContext context, AuthService authService, JwtService jwtService) : base(context)
+        public AuthController(CSDbContext context, AuthService authService, JwtService jwtService) : base(context)
         {
             _jwtService = jwtService;
             _authService = authService;

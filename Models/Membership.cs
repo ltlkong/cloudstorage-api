@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace ltl_cloudstorage.Models
 {
-    [Table("Membership")]
     public class Membership
     {
         [JsonIgnore]

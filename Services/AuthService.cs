@@ -13,7 +13,7 @@ namespace ltl_cloudstorage.Services
 {
     public class AuthService : BaseService
     {
-        public AuthService(PFDbContext context) : base(context)
+        public AuthService(CSDbContext context) : base(context)
         {
         }
 

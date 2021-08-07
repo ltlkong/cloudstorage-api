@@ -6,7 +6,6 @@ using System.Text.Json.Serialization;
 
 namespace ltl_cloudstorage.Models
 {
-    [Table("Role")]
     [Index(nameof(Name), IsUnique = true)]
     public class Role
     {
@@ -14,7 +13,7 @@ namespace ltl_cloudstorage.Models
         public int Id { get; set; }
         public string Name { get; set; }
         [JsonIgnore]
-        public ICollection<User> Users { get; set; }
+        public virtual ICollection<User> Users { get; set; }
         public Role()
         {
             Users = new HashSet<User>();
