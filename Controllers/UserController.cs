@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace ltl_cloudstorage.Controllers
 {
     [Authorize]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class UserController : BaseController
     {

@@ -15,26 +15,23 @@ namespace ltl_cloudstorage.Services
         {
         }
 
-        public async Task<bool> StoreAsync(IFormFile file)
+        public async Task StoreAsync(IFormFile file, int UserId, int? directoryId)
         {
-            try
+            string filePath = "/" + System.IO.Path.GetRandomFileName();
+            string actualFileName = file.FileName;
+
+            using (var stream = System.IO.File.Create(_contextStoragePath + filePath))
             {
-                string filePath = "/" + System.IO.Path.GetRandomFileName();
-                string actualFileName = file.FileName;
-
-                using (var stream = System.IO.File.Create(_contextStoragePath + filePath))
-                {
-                    await file.CopyToAsync(stream);
-                }
-
-                await CreateDbDocumentInstanceAsync(actualFileName, filePath, file.Length);
-
-                return true;
+                await file.CopyToAsync(stream);
             }
-            catch
+
+            if(directoryId == null)
             {
-                return false;
+                LtlDirectory defaultDirectory = await GetDefaultDirectoryByUserIdAsync(UserId);
+                directoryId = defaultDirectory.Id;
             }
+                
+            await CreateDbFileInstanceAsync(actualFileName, filePath, file.Length, (int)directoryId);
         }
 
         public async Task<LtlFile> GetFileByIdAsync(int id)
@@ -50,7 +47,7 @@ namespace ltl_cloudstorage.Services
 
             return file;
         }
-        public async Task<List<LtlFile>> GetFilesByNameAsync(string name)
+        public async Task<List<LtlFile>> SearchFilesByNameAsync(string name)
         {
             List<LtlFile> files = await _context.LtlFiles
                 .Where(f => f.Name.ToLower().Contains(name.ToLower())).ToListAsync();
@@ -62,6 +59,18 @@ namespace ltl_cloudstorage.Services
         {
             List<LtlFile> files = await _context.LtlFiles
                 .Where(f => f.DirectoryId == id).ToListAsync();
+
+            return files;
+        }
+        public async Task<List<LtlFile>> GetFilesByUserIdAsync(int id)
+        {
+            List<LtlDirectory> directories = await GetDirectoriesByUserIdAsync(id);
+            List<LtlFile> files = new List<LtlFile>();
+
+            foreach(LtlDirectory directory in directories)
+            {
+                files.AddRange(await GetFilesByDirectoryIdAsync(directory.Id));
+            }
 
             return files;
         }
@@ -93,12 +102,12 @@ namespace ltl_cloudstorage.Services
             return guid;
         }
 
-        private async Task CreateDbDocumentInstanceAsync(string fileName, string filePath, long size)
+        private async Task CreateDbFileInstanceAsync(string fileName, string filePath, long size, int directoryId)
         {
             string guid = GenerateGuid();
 
             System.IO.FileInfo fileInfo = new System.IO.FileInfo(fileName);
-            LtlFile file = new LtlFile(guid, fileInfo.Name, fileInfo.Extension, filePath, size);
+            LtlFile file = new LtlFile(guid, fileInfo.Name, fileInfo.Extension, filePath, size, directoryId);
 
             await _context.LtlFiles.AddAsync(file);
             await _context.SaveChangesAsync();
@@ -108,20 +117,65 @@ namespace ltl_cloudstorage.Services
 
     public partial class StorageService
     {
-        public async Task<bool> CreateDirectoryAsync(string name)
+        public async Task<bool> CreateDirectoryAsync(string name, int userId)
         {
-            try
-            {
-                LtlDirectory directory = new LtlDirectory(GenerateGuid(), name);
+            LtlDirectory directory = await GetDirectoryByNameAsync(name);
 
-                await _context.LtlDirectories.AddAsync(directory);
-
-                return true;
-            }
-            catch
-            {
+            if (directory != null)
                 return false;
+
+            directory = new LtlDirectory(GenerateGuid(), name, userId);
+
+            await _context.LtlDirectories.AddAsync(directory);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<List<LtlDirectory>> GetDirectoriesByUserIdAsync(int id)
+        {
+            List<LtlDirectory> directories = await _context.LtlDirectories
+                .Where(d => d.UserInfoId == id).ToListAsync();
+
+            return directories;
+        }
+
+        public async Task<List<LtlDirectory>> SearchDirectoryByNameAsync(string name)
+        {
+            List<LtlDirectory> directories = await _context.LtlDirectories
+                .Where(d => d.Name.ToLower().Equals(name.ToLower())).ToListAsync();
+
+            return directories;
+        }
+
+        public async Task<LtlDirectory> GetDirectoryByNameAsync(string name)
+        {
+            LtlDirectory directory = await _context.LtlDirectories.FirstOrDefaultAsync(d => d.Name.Equals(name));
+
+            return directory;
+        }
+
+        public LtlDirectory GetDirectoryByName(string name, List<LtlDirectory> directories)
+        {
+            LtlDirectory directory = directories.FirstOrDefault(d => d.Name.Equals(name));
+
+            return directory;
+        }
+
+        public async Task<LtlDirectory> GetDefaultDirectoryByUserIdAsync(int id)
+        {
+            List<LtlDirectory> directories = await GetDirectoriesByUserIdAsync(id);
+            LtlDirectory defaultDirectory = GetDirectoryByName("Default", directories);
+
+            if(defaultDirectory == null)
+            {
+                await CreateDirectoryAsync("Default", id);
             }
+
+            defaultDirectory = await _context.LtlDirectories
+                .FirstAsync(d => d.Name.Equals("Default"));
+
+            return defaultDirectory;
         }
     }
 }

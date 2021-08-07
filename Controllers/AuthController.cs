@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ltl_cloudstorage.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class AuthController : BaseController
     {

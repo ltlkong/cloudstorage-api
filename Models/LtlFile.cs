@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace ltl_cloudstorage.Models
 {
     public class LtlFile
     {
-        public LtlFile(string uniqueId, string name,string type, string path, long size, int directoryId=1)
+        public LtlFile(string uniqueId, string name,string type, string path, long size, int directoryId)
         {
             UniqueId = uniqueId;
             Type = type;
@@ -30,6 +31,7 @@ namespace ltl_cloudstorage.Models
         public long Size { get; set; }
         [ForeignKey("Directory")]
         public int DirectoryId { get; set; }
+        [JsonIgnore]
         public LtlDirectory Directory { get; set; }
     }
 }

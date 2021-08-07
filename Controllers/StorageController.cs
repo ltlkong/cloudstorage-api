@@ -1,5 +1,6 @@
 ﻿using ltl_cloudstorage.Models;
 using ltl_cloudstorage.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,7 +15,8 @@ using System.Threading.Tasks;
 
 namespace ltl_cloudstorage.Controllers
 {
-    [Route("[controller]")]
+    [Authorize]
+    [Route("api/[controller]")]
     [ApiController]
     public class StorageController : BaseController
     {
@@ -24,32 +26,74 @@ namespace ltl_cloudstorage.Controllers
             _storageService = storageService;
         }
 
-        // GET: api/<StorageController>
-        [HttpGet]
-        public async Task<IActionResult> Get(int id)
+        //Test
+        [AllowAnonymous]
+        [HttpGet("test")]
+        public async Task<IActionResult> Get(string name)
         {
-            LtlFile file = await _storageService.GetFileByIdAsync(id);
+            LtlFile file = (await _storageService.SearchFilesByNameAsync(name)).First();
             Byte[] fileBytes = await _storageService.GetFileBytesAsync(file.Path);
             string mimeType = _storageService.GetFileType(file.Name);
 
-            return File(fileBytes, mimeType);
+            Response.Headers.Add("Access-Control-Expose-Headers", "content-disposition");
+
+            return File(fileBytes, mimeType, file.Name);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> PostFile(IFormFile file)
+        [AllowAnonymous]
+        // Test
+        [HttpPost("test")]
+        public async Task<IActionResult> Post(IFormFile file)
         {
             long size = file.Length;
-            bool isSuccess = false;
 
             if (file.Length > 0)
             {
-                isSuccess = await _storageService.StoreAsync(file);
+                await _storageService.StoreAsync(file, 1, 1);
             }
 
-            if (isSuccess)
+            return CreatedAtAction("PostFile", new { size, fileName = file.FileName });
+        }
+
+        [Authorize(Roles ="Admin")]
+        // GET: api/<StorageController>
+        [HttpGet("admin")]
+        public async Task<IActionResult> Get(int fileid)
+        {
+            LtlFile file = await _storageService.GetFileByIdAsync(fileid);
+            Byte[] fileBytes = await _storageService.GetFileBytesAsync(file.Path);
+            string mimeType = _storageService.GetFileType(file.Name);
+
+            Response.Headers.Add("Access-Control-Expose-Headers", "content-disposition");
+
+            return File(fileBytes, mimeType, file.Name);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllFilesFromCurrentUser()
+        {
+            List<LtlFile> files = await _storageService.GetFilesByUserIdAsync(GetCurrentUser().Id);
+
+            return Ok(files);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PostFile(IFormFile file, [FromForm]int? directoryId)
+        {
+            try
+            {
+                long size = file.Length;
+
+                if (file.Length > 0)
+                {
+                    await _storageService.StoreAsync(file, GetCurrentUser().Id, directoryId);
+                }
+
                 return CreatedAtAction("PostFile", new { size, fileName = file.FileName });
-            else
+            }catch
+            {
                 return BadRequest();
+            }    
         }
 
         // PUT api/<StorageController>/5
