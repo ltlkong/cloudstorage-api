@@ -33,14 +33,12 @@ namespace ltl_cloudstorage.Services
                 
             await CreateDbFileInstanceAsync(actualFileName, filePath, file.Length, (int)directoryId);
         }
-
         public async Task<LtlFile> GetFileByIdAsync(int id)
         {
             LtlFile file = await _context.LtlFiles.FindAsync(id);
 
             return file;
         }
-
         public async Task<LtlFile> GetFileByUniqueIdAsync(string uniqueId)
         {
             LtlFile file = await _context.LtlFiles.FirstAsync(f => f.UniqueId.Equals(uniqueId));
@@ -54,7 +52,6 @@ namespace ltl_cloudstorage.Services
 
             return files;
         }
-
         public async Task<List<LtlFile>> GetFilesByDirectoryIdAsync(int id)
         {
             List<LtlFile> files = await _context.LtlFiles
@@ -74,21 +71,18 @@ namespace ltl_cloudstorage.Services
 
             return files;
         }
-
         public string GetFileType(string fileName)
         {
             string mimeType = MimeMapping.MimeUtility.GetMimeMapping(fileName);
 
             return mimeType;
         }
-
         public async Task<Byte[]> GetFileBytesAsync(string filePath)
         {
             Byte[] fileBytes = await System.IO.File.ReadAllBytesAsync(FullPath(filePath));
 
             return fileBytes;
         }
-
         public string FullPath(string filePath)
         {
             return _contextStoragePath + filePath;
@@ -101,13 +95,9 @@ namespace ltl_cloudstorage.Services
 
             return guid;
         }
-
         private async Task CreateDbFileInstanceAsync(string fileName, string filePath, long size, int directoryId)
         {
-            string guid = GenerateGuid();
-
-            System.IO.FileInfo fileInfo = new System.IO.FileInfo(fileName);
-            LtlFile file = new LtlFile(guid, fileInfo.Name, fileInfo.Extension, filePath, size, directoryId);
+            LtlFile file = new LtlFile(GenerateGuid(), fileName, GetFileType(fileName), filePath, size, directoryId);
 
             await _context.LtlFiles.AddAsync(file);
             await _context.SaveChangesAsync();
@@ -131,7 +121,6 @@ namespace ltl_cloudstorage.Services
 
             return true;
         }
-
         public async Task<List<LtlDirectory>> GetDirectoriesByUserIdAsync(int id)
         {
             List<LtlDirectory> directories = await _context.LtlDirectories
@@ -139,7 +128,6 @@ namespace ltl_cloudstorage.Services
 
             return directories;
         }
-
         public async Task<List<LtlDirectory>> SearchDirectoryByNameAsync(string name)
         {
             List<LtlDirectory> directories = await _context.LtlDirectories
@@ -147,21 +135,18 @@ namespace ltl_cloudstorage.Services
 
             return directories;
         }
-
         public async Task<LtlDirectory> GetDirectoryByNameAsync(string name)
         {
             LtlDirectory directory = await _context.LtlDirectories.FirstOrDefaultAsync(d => d.Name.Equals(name));
 
             return directory;
         }
-
         public LtlDirectory GetDirectoryByName(string name, List<LtlDirectory> directories)
         {
             LtlDirectory directory = directories.FirstOrDefault(d => d.Name.Equals(name));
 
             return directory;
         }
-
         public async Task<LtlDirectory> GetDefaultDirectoryByUserIdAsync(int id)
         {
             List<LtlDirectory> directories = await GetDirectoriesByUserIdAsync(id);

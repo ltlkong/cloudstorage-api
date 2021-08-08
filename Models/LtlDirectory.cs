@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace ltl_cloudstorage.Models
 {
+    [Index(nameof(UniqueId), IsUnique = true)]
     public class LtlDirectory
     {
         public LtlDirectory(string uniqueId, string name, int userInfoId)
