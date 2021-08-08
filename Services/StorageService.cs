@@ -20,11 +20,6 @@ namespace ltl_cloudstorage.Services
             string filePath = "/" + System.IO.Path.GetRandomFileName();
             string actualFileName = file.FileName;
 
-            using (var stream = System.IO.File.Create(_contextStoragePath + filePath))
-            {
-                await file.CopyToAsync(stream);
-            }
-
             if(directoryId == null)
             {
                 LtlDirectory defaultDirectory = await GetDefaultDirectoryByUserIdAsync(UserId);
@@ -32,6 +27,11 @@ namespace ltl_cloudstorage.Services
             }
                 
             await CreateDbFileInstanceAsync(actualFileName, filePath, file.Length, (int)directoryId);
+
+            using (var stream = System.IO.File.Create(_contextStoragePath + filePath))
+            {
+                await file.CopyToAsync(stream);
+            }
         }
         public async Task<LtlFile> GetFileByIdAsync(int id)
         {

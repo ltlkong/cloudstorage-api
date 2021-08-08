@@ -49,7 +49,7 @@ namespace ltl_cloudstorage.Controllers
 
             if (file.Length > 0)
             {
-                await _storageService.StoreAsync(file, 1, 1);
+                await _storageService.StoreAsync(file, 1, null);
             }
 
             return CreatedAtAction("PostFile", new { size, fileName = file.FileName });
