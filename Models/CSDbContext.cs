@@ -25,6 +25,7 @@ namespace ltl_cloudstorage.Models
             base.OnModelCreating(builder);
             this.SeedMemberships(builder);
             this.SeedUsers(builder);
+            this.SeedPublicInfo(builder);
         }
 
         private void SeedMemberships(ModelBuilder builder)
@@ -69,6 +70,18 @@ namespace ltl_cloudstorage.Models
                 new User()
                 {
                     Id=1,
+                    Name = "public",
+                    DisplayName = "public",
+                    Email = "public@public.com",
+                    PasswordHash = "public",
+                    CreatedAt = DateTime.Now,
+                    LastLoginAt = DateTime.Now,
+                    MembershipId = 1
+                },
+
+                new User()
+                {
+                    Id=2,
                     Name = "ltl",
                     DisplayName = "ltl",
                     Email = "tielinli@yahoo.com",
@@ -80,7 +93,7 @@ namespace ltl_cloudstorage.Models
 
                 new User()
                 {
-                    Id=2,
+                    Id=3,
                     Name = "LisaLee",
                     DisplayName = "LisaLee",
                     Email = "1248988727@qq.com",
@@ -94,5 +107,17 @@ namespace ltl_cloudstorage.Models
             builder.Entity<User>().HasData(users);
         }
 
+        private void SeedPublicInfo(ModelBuilder builder) 
+        {
+            UserInfo publicInfo = new UserInfo() 
+            {
+                Id=1,
+                Reputation = 100,
+                Introduction = "# Public test user",
+                UpdatedAt = DateTime.Now
+            };
+
+            builder.Entity<UserInfo>().HasData(publicInfo);
+        }
     }
 }

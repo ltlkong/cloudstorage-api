@@ -34,7 +34,8 @@ namespace ltl_cloudstorage.Controllers
             LtlFile file = (await _storageService.SearchFilesByNameAsync(name)).First();
             Byte[] fileBytes = await _storageService.GetFileBytesAsync(file.Path);
             string mimeType = _storageService.GetFileType(file.Name);
-
+            
+        
             Response.Headers.Add("Access-Control-Expose-Headers", "content-disposition");
 
             return File(fileBytes, mimeType, file.Name);
