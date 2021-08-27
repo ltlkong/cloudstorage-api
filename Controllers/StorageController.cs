@@ -26,36 +26,6 @@ namespace ltl_cloudstorage.Controllers
             _storageService = storageService;
         }
 
-        //Test
-        [AllowAnonymous]
-        [HttpGet("test")]
-        public async Task<IActionResult> Get(string name)
-        {
-            LtlFile file = (await _storageService.SearchFilesByNameAsync(name)).First();
-            Byte[] fileBytes = await _storageService.GetFileBytesAsync(file.Path);
-            string mimeType = _storageService.GetFileType(file.Name);
-            
-        
-            Response.Headers.Add("Access-Control-Expose-Headers", "content-disposition");
-
-            return File(fileBytes, mimeType, file.Name);
-        }
-
-        [AllowAnonymous]
-        // Test
-        [HttpPost("test")]
-        public async Task<IActionResult> Post(IFormFile file)
-        {
-            long size = file.Length;
-
-            if (file.Length > 0)
-            {
-                await _storageService.StoreAsync(file, 1, null);
-            }
-
-            return CreatedAtAction("PostFile", new { size, fileName = file.FileName });
-        }
-
         [Authorize(Roles ="Admin")]
         // GET: api/<StorageController>
         [HttpGet("admin")]
