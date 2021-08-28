@@ -39,12 +39,6 @@ namespace ltl_cloudstorage.Services
 
             return file;
         }
-        public async Task<LtlFile> GetFileByUniqueIdAsync(string uniqueId)
-        {
-            LtlFile file = await _context.LtlFiles.FirstAsync(f => f.UniqueId.Equals(uniqueId));
-
-            return file;
-        }
         public async Task<List<LtlFile>> SearchFilesByNameAsync(string name)
         {
             List<LtlFile> files = await _context.LtlFiles
@@ -52,6 +46,15 @@ namespace ltl_cloudstorage.Services
 
             return files;
         }
+
+		public async Task<LtlFile> SearchFileByUniqueIdAsync(string uniqueId)
+		{
+			LtlFile file = await _context.LtlFiles.SingleOrDefaultAsync(f => f.UniqueId.Equals(uniqueId));
+
+			return file;
+		}
+
+
         public async Task<List<LtlFile>> GetFilesByDirectoryIdAsync(int id)
         {
             List<LtlFile> files = await _context.LtlFiles
