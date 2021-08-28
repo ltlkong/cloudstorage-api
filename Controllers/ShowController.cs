@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 
 namespace ltl_cloudstorage.Controllers
 {
+	[Route("api/[controller]")]
+	[ApiController]
     public class ShowController : BaseController
     {
 		private readonly StorageService _storageService;
@@ -22,22 +24,59 @@ namespace ltl_cloudstorage.Controllers
    		}
 
         [AllowAnonymous]
-        [HttpGet("file")]
-        public async Task<IActionResult> Get(string name)
+        [HttpGet("file/search")]
+        public async Task<IActionResult> GetFileBy(string type, string value)
         {
-            LtlFile file = (await _storageService.SearchFilesByNameAsync(name)).First();
-            Byte[] fileBytes = await _storageService.GetFileBytesAsync(file.Path);
-            string mimeType = _storageService.GetFileType(file.Name);
-            
-        
-            Response.Headers.Add("Access-Control-Expose-Headers", "content-disposition");
+			if(!String.IsNullOrEmpty(type) && !String.IsNullOrEmpty(value))
+			{
+            	List<LtlFile> files = new List<LtlFile>();
 
-            return File(fileBytes, mimeType, file.Name);
+				switch(type)
+				{
+					case "name":
+            			files = await _storageService.SearchFilesByNameAsync(value);
+						break;
+					case "id":
+						LtlFile file = await _storageService.SearchFileByUniqueIdAsync(value);
+						files.Add(file);
+						break;
+					default:
+						break;
+				}
+
+				if(files.Count == 0)
+					return NotFound();
+				return Ok(files);
+			}
+
+			return BadRequest();
         }
+
+		[AllowAnonymous]
+		[HttpGet("file/entity")]
+		public async Task<IActionResult> GetFileEntityByUniqueId(string uniqueId)
+		{
+			LtlFile file = await _storageService.SearchFileByUniqueIdAsync(uniqueId);
+
+			Byte[] fileBytes = await _storageService.GetFileBytesAsync(file.Path);
+
+			string mimeType = _storageService.GetFileType(file.Name);
+
+			return File(fileBytes, mimeType,file.Name);
+		}
+
+		[AllowAnonymous]
+		[HttpGet("file")]
+		public async Task<IActionResult> GetAllFiles()
+		{
+			List<LtlFile> files = _context.LtlFiles.ToList();
+
+			return Ok(files);
+		}
 
         [AllowAnonymous]
         [HttpPost("file")]
-        public async Task<IActionResult> Post(IFormFile file)
+        public async Task<IActionResult> UploadFile(IFormFile file)
         {
             long size = file.Length;
 
