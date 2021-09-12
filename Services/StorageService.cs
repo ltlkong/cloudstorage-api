@@ -111,7 +111,7 @@ namespace ltl_cloudstorage.Services
 				return isSuccess;
 
 			file.isDeleted = true;
-			isSuccess = UpdateFileById(file);
+			isSuccess = UpdateFile(file);
 
 			return isSuccess;
 		}
@@ -140,14 +140,18 @@ namespace ltl_cloudstorage.Services
 
     public partial class StorageService
     {
-        public async Task<bool> CreateDirectoryAsync(string name, int userId)
+        public async Task<bool> CreateDirectoryAsync(string name, int userId, int? parentDirId)
         {
-            LtlDirectory directory = await GetDirectoryByNameAsync(name);
+            List<LtlDirectory> directories = await GetDirectoryByNameAsync(name);
+			// Get the same layer dirs
+			List<LtlDirectory> dirsFiltered = directories
+				.Where(dir => dir.Name.Equals(name) && dir.UserInfoId == userId && dir.ParentDirId == parentDirId)
+				.ToList();
 
-            if (directory != null)
+            if (dirsFiltered.Count() > 1)
                 return false;
 
-            directory = new LtlDirectory(GenerateGuid(), name, userId);
+            LtlDirectory directory = new LtlDirectory(GenerateGuid(), name, userId, parentDirId);
 
             await _context.LtlDirectories.AddAsync(directory);
             await _context.SaveChangesAsync();
@@ -168,11 +172,11 @@ namespace ltl_cloudstorage.Services
 
             return directories;
         }
-        public async Task<LtlDirectory> GetDirectoryByNameAsync(string name)
+        public async Task<List<LtlDirectory>> GetDirectoryByNameAsync(string name)
         {
-            LtlDirectory directory = await _context.LtlDirectories.FirstOrDefaultAsync(d => d.Name.Equals(name));
+            List<LtlDirectory> directories = await _context.LtlDirectories.Where(d => d.Name.Equals(name)).ToListAsync();
 
-            return directory;
+            return directories;
         }
         public LtlDirectory GetDirectoryByName(string name, List<LtlDirectory> directories)
         {
@@ -187,7 +191,7 @@ namespace ltl_cloudstorage.Services
 
             if(defaultDirectory == null)
             {
-                await CreateDirectoryAsync("Default", id);
+                await CreateDirectoryAsync("Default", id, null);
             }
 
             defaultDirectory = await _context.LtlDirectories

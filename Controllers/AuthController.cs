@@ -8,8 +8,6 @@ using ltl_cloudstorage.Dtos;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
 
 namespace ltl_cloudstorage.Controllers
 {

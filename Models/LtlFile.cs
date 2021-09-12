@@ -31,6 +31,7 @@ namespace ltl_cloudstorage.Models
         public string Path { get; set; }
         [MaxLength(40)]
         public string Type { get; set; }
+		[JsonIgnore]
 		public bool isDeleted { get; set;}
         public long Size { get; set; }
         [ForeignKey("Directory")]

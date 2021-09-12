@@ -3,12 +3,8 @@ using ltl_cloudstorage.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -48,7 +44,7 @@ namespace ltl_cloudstorage.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostFile(IFormFile file, [FromForm]int? directoryId)
+        public async Task<IActionResult> UploadFile(IFormFile file, [FromForm]int? directoryId)
         {
             try
             {

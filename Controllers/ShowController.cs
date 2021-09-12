@@ -1,4 +1,5 @@
 using ltl_cloudstorage.Models;
+using Microsoft.EntityFrameworkCore;
 using ltl_cloudstorage.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -67,7 +68,7 @@ namespace ltl_cloudstorage.Controllers
 		[HttpGet("file")]
 		public async Task<IActionResult> GetAllFiles()
 		{
-			List<LtlFile> files = _context.LtlFiles.ToList();
+			List<LtlFile> files = await _context.LtlFiles.Where(f => !f.isDeleted).ToListAsync();
 
 			return Ok(files);
 		}
@@ -82,7 +83,7 @@ namespace ltl_cloudstorage.Controllers
                 await _storageService.StoreAsync(file, 1, null);
             }
 
-            return CreatedAtAction("PostFile", new { size, fileName = file.FileName });
+            return CreatedAtAction(nameof(UploadFile), new { size, fileName = file.FileName });
         }
 
 		[HttpGet("test")]
