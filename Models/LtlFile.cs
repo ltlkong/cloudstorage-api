@@ -20,6 +20,7 @@ namespace ltl_cloudstorage.Models
             Path = path;
             Size = size;
             DirectoryId = directoryId;
+			isDeleted = false;
         }
 
         public int Id { get; set; }
@@ -30,6 +31,7 @@ namespace ltl_cloudstorage.Models
         public string Path { get; set; }
         [MaxLength(40)]
         public string Type { get; set; }
+		public bool isDeleted { get; set;}
         public long Size { get; set; }
         [ForeignKey("Directory")]
         public int DirectoryId { get; set; }

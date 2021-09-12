@@ -18,30 +18,29 @@ namespace ltl_cloudstorage.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class StorageController : BaseController
+    public class FileController : BaseController
     {
         private readonly StorageService _storageService;
-        public StorageController(CSDbContext context, StorageService storageService) : base(context)
+        public FileController(CSDbContext context, StorageService storageService) : base(context)
         {
             _storageService = storageService;
         }
 
-        [Authorize(Roles ="Admin")]
-        // GET: api/<StorageController>
-        [HttpGet("admin")]
-        public async Task<IActionResult> Get(int fileid)
-        {
-            LtlFile file = await _storageService.GetFileByIdAsync(fileid);
-            Byte[] fileBytes = await _storageService.GetFileBytesAsync(file.Path);
-            string mimeType = _storageService.GetFileType(file.Name);
+		[HttpGet("{id}")]
+		public async Task<IActionResult> GetFileBy(int id)
+		{
+			LtlFile file = await _storageService.GetFileByIdAsync(id);
+			List<LtlFile> files = await _storageService.GetFilesByUserIdAsync(GetCurrentUser().Id);
 
-            Response.Headers.Add("Access-Control-Expose-Headers", "content-disposition");
+			LtlFile isExitsInUserFiles = files.FirstOrDefault(f => f.Id == file.Id);
+			if(isExitsInUserFiles == null)
+				return NotFound();
 
-            return File(fileBytes, mimeType, file.Name);
-        }
+			return Ok(file);
+		}
 
         [HttpGet]
-        public async Task<IActionResult> GetAllFilesFromCurrentUser()
+        public async Task<IActionResult> GetAllFiles()
         {
             List<LtlFile> files = await _storageService.GetFilesByUserIdAsync(GetCurrentUser().Id);
 
@@ -67,16 +66,25 @@ namespace ltl_cloudstorage.Controllers
             }    
         }
 
-        // PUT api/<StorageController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Put(LtlFile file)
         {
+			bool isSuccess = _storageService.UpdateFile(file);
+			if(!isSuccess) 
+				return BadRequest();
+
+			return Ok(new {msg="updated", file});
         }
 
         // DELETE api/<StorageController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+			bool isSuccess = await _storageService.DeleteFileByIdAsync(id);
+			if(!isSuccess) 
+				return BadRequest();
+
+			return Ok(new {msg="file deleted"});
         }
     }
 }

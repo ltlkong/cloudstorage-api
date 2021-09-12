@@ -23,7 +23,6 @@ namespace ltl_cloudstorage.Controllers
 			_storageService = storageService;
    		}
 
-        [AllowAnonymous]
         [HttpGet("file/search")]
         public async Task<IActionResult> GetFileBy(string type, string value)
         {
@@ -38,7 +37,8 @@ namespace ltl_cloudstorage.Controllers
 						break;
 					case "id":
 						LtlFile file = await _storageService.SearchFileByUniqueIdAsync(value);
-						files.Add(file);
+						if(file != null)
+							files.Add(file);
 						break;
 					default:
 						break;
@@ -52,7 +52,6 @@ namespace ltl_cloudstorage.Controllers
 			return BadRequest();
         }
 
-		[AllowAnonymous]
 		[HttpGet("file/entity")]
 		public async Task<IActionResult> GetFileEntityByUniqueId(string uniqueId)
 		{
@@ -65,7 +64,6 @@ namespace ltl_cloudstorage.Controllers
 			return File(fileBytes, mimeType,file.Name);
 		}
 
-		[AllowAnonymous]
 		[HttpGet("file")]
 		public async Task<IActionResult> GetAllFiles()
 		{
@@ -74,7 +72,6 @@ namespace ltl_cloudstorage.Controllers
 			return Ok(files);
 		}
 
-        [AllowAnonymous]
         [HttpPost("file")]
         public async Task<IActionResult> UploadFile(IFormFile file)
         {
@@ -87,6 +84,12 @@ namespace ltl_cloudstorage.Controllers
 
             return CreatedAtAction("PostFile", new { size, fileName = file.FileName });
         }
+
+		[HttpGet("test")]
+		public async Task<IActionResult> Test()
+		{
+			return Ok(new {test="hi"});
+		}
 	}
 }
 

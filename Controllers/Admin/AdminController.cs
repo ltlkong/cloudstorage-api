@@ -10,28 +10,23 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using ltl_cloudstorage.Controllers;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ltl_cloudstorage.Controllers
+namespace ltl_cloudstorage.Admin.Controllers
 {
-    [Authorize(Roles ="Admin")]
-    [Route("api/[controller]")]
-    [ApiController]
     public class AdminController : BaseController
     {
-        private readonly UserService _userService;
-        public AdminController(CSDbContext context, UserService userService) : base(context)
+        protected readonly UserService _userService;
+		protected readonly StorageService _storageService;
+        public AdminController(CSDbContext context
+				, UserService userService
+				, StorageService storageService) : base(context)
         {
             _userService = userService;
+			_storageService = storageService;
         }
 
-        [HttpGet("users")]
-        public async Task<IActionResult> GetUsers()
-        {
-            ICollection<User> users = await _userService.GetAllAsync();
-
-            return Ok(new { msg="All users", users});
-        }
     }
 }

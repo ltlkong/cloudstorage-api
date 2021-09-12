@@ -37,19 +37,22 @@ namespace ltl_cloudstorage.Services
         {
             LtlFile file = await _context.LtlFiles.FindAsync(id);
 
-            return file;
+			if(file != null && !file.isDeleted )
+				return file;
+
+			return null;
         }
         public async Task<List<LtlFile>> SearchFilesByNameAsync(string name)
         {
             List<LtlFile> files = await _context.LtlFiles
-                .Where(f => f.Name.ToLower().Contains(name.ToLower())).ToListAsync();
+                .Where(f => f.Name.ToLower().Contains(name.ToLower()) && !f.isDeleted).ToListAsync();
 
             return files;
         }
 
 		public async Task<LtlFile> SearchFileByUniqueIdAsync(string uniqueId)
 		{
-			LtlFile file = await _context.LtlFiles.SingleOrDefaultAsync(f => f.UniqueId.Equals(uniqueId));
+			LtlFile file = await _context.LtlFiles.SingleOrDefaultAsync(f => f.UniqueId.Equals(uniqueId) && !f.isDeleted);
 
 			return file;
 		}
@@ -58,7 +61,7 @@ namespace ltl_cloudstorage.Services
         public async Task<List<LtlFile>> GetFilesByDirectoryIdAsync(int id)
         {
             List<LtlFile> files = await _context.LtlFiles
-                .Where(f => f.DirectoryId == id).ToListAsync();
+                .Where(f => f.DirectoryId == id && !f.isDeleted).ToListAsync();
 
             return files;
         }
@@ -86,10 +89,33 @@ namespace ltl_cloudstorage.Services
 
             return fileBytes;
         }
-        public string FullPath(string filePath)
-        {
-            return _contextStoragePath + filePath;
-        }
+		public bool UpdateFile(LtlFile file)
+		{
+			try
+			{
+				_context.Entry(file).State = EntityState.Modified;
+
+				return true;
+			}catch{
+				return false;
+			}
+
+		}
+		public async Task<bool> DeleteFileByIdAsync(int id)
+		{
+			bool isSuccess = false;
+
+			LtlFile file = await GetFileByIdAsync(id);
+
+			if(file == null)
+				return isSuccess;
+
+			file.isDeleted = true;
+			isSuccess = UpdateFileById(file);
+
+			return isSuccess;
+		}
+		
 
         #region helpers
         private string GenerateGuid()
@@ -104,6 +130,10 @@ namespace ltl_cloudstorage.Services
 
             await _context.LtlFiles.AddAsync(file);
             await _context.SaveChangesAsync();
+        }
+        public string FullPath(string filePath)
+        {
+            return _contextStoragePath + filePath;
         }
         #endregion
     }
