@@ -215,8 +215,7 @@ namespace ltl_cloudstorage.Services
                 await CreateDirectoryAsync("Default", id, null);
             }
 
-            defaultDirectory = await _context.LtlDirectories
-                .FirstAsync(d => d.Name.Equals("Default"));
+            defaultDirectory = GetDirectoryByName("Default", directories);
 
             return defaultDirectory;
         }
