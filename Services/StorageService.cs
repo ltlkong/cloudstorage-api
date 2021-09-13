@@ -58,6 +58,16 @@ namespace ltl_cloudstorage.Services
 			return file;
 		}
 
+		public async Task<bool> CheckIsUserFileAsync(int fileId, int userId)
+		{
+			ICollection<LtlFile> files = await GetFilesByUserIdAsync(userId);
+			
+			if(files.FirstOrDefault(f => f.Id == fileId) != null)
+				return true;
+
+			return false;
+		}
+
 
         public async Task<ICollection<LtlFile>> GetFilesByDirectoryIdAsync(int id)
         {

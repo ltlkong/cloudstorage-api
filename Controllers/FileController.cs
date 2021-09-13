@@ -59,8 +59,11 @@ namespace ltl_cloudstorage.Controllers
             }    
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(LtlFile file)
+        public async Task<IActionResult> Put(int id, [Bind("Name","DirectoryId")]LtlFile file)
         {
+			if(!await _storageService.CheckIsUserFileAsync(id, GetCurrentUser().Id))
+				return BadRequest();
+
 			bool isSuccess = await _storageService.UpdateFileAsync(file);
 			if(!isSuccess) 
 				return BadRequest();
