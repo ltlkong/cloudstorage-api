@@ -15,7 +15,6 @@ namespace ltl_cloudstorage.Services
         public UserService(CSDbContext context) : base(context)
         {
         }
-
         public async Task<ICollection<User>> GetAllAsync()
         {
             ICollection<User> users = await _context.Users.Include(user => user.Roles).ToListAsync();
@@ -96,7 +95,6 @@ namespace ltl_cloudstorage.Services
 
             return true;
         }
-
         #region helpers
         // Take a string split by white space. E.g. display name => DisplayName
         private string WordFirstCharToUpper(string str)

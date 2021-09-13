@@ -21,7 +21,6 @@ namespace ltl_cloudstorage.Controllers
         {
             _storageService = storageService;
         }
-
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetFileBy(int id)
 		{
@@ -34,7 +33,6 @@ namespace ltl_cloudstorage.Controllers
 
 			return Ok(file);
 		}
-
         [HttpGet]
         public async Task<IActionResult> GetAllFiles()
         {
@@ -42,7 +40,6 @@ namespace ltl_cloudstorage.Controllers
 
             return Ok(files);
         }
-
         [HttpPost]
         public async Task<IActionResult> UploadFile(IFormFile file, [FromForm]int? directoryId)
         {
@@ -61,7 +58,6 @@ namespace ltl_cloudstorage.Controllers
                 return BadRequest();
             }    
         }
-
         [HttpPut("{id}")]
         public IActionResult Put(LtlFile file)
         {
@@ -71,8 +67,6 @@ namespace ltl_cloudstorage.Controllers
 
 			return Ok(new {msg="updated", file});
         }
-
-        // DELETE api/<StorageController>/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

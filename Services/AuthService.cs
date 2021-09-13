@@ -68,7 +68,7 @@ namespace ltl_cloudstorage.Services
         }
         #region helpers
         //Encode a string by using md5
-        private string Md5Encode(string str)
+        public string Md5Encode(string str)
         {
             //Encoding password using md5
             var md5 = new MD5CryptoServiceProvider();

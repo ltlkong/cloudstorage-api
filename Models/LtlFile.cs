@@ -28,6 +28,7 @@ namespace ltl_cloudstorage.Models
         [MaxLength(300)]
         public string Name { get; set; }
         // Context is where the Storage folder located
+		[JsonIgnore]
         public string Path { get; set; }
         [MaxLength(40)]
         public string Type { get; set; }
