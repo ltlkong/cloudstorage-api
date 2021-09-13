@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace ltl_cloudstorage.Services
 {
@@ -17,7 +18,7 @@ namespace ltl_cloudstorage.Services
 
         public async Task StoreAsync(IFormFile file, int UserId, int? directoryId)
         {
-            string filePath = "/" + System.IO.Path.GetRandomFileName();
+            string filePath = "/" + Path.GetRandomFileName();
             string actualFileName = file.FileName;
 
             if(directoryId == null)
@@ -101,7 +102,7 @@ namespace ltl_cloudstorage.Services
 			}
 
 		}
-		public async Task<bool> DeleteFileByIdAsync(int id)
+		public async Task<bool> SoftDeleteFileByIdAsync(int id)
 		{
 			bool isSuccess = false;
 
@@ -111,11 +112,28 @@ namespace ltl_cloudstorage.Services
 				return isSuccess;
 
 			file.isDeleted = true;
+			file.DirectoryId = 1;
+			file.UniqueId = "deleted"+file.Id;
 			isSuccess = UpdateFile(file);
 
 			return isSuccess;
 		}
 		
+		// Completely remove a file
+		public async Task<bool> HardDeleteFileByIdAsync(int id)
+		{
+			bool isSuccess = false;
+
+			LtlFile file = await GetFileByIdAsync(id);
+
+			if(file == null)
+				return isSuccess;
+
+			File.Delete(FullPath(file.Path));
+			_context.Entry(file).State = EntityState.Deleted;
+
+			return isSuccess;
+		}
 
         #region helpers
         private string GenerateGuid()

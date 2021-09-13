@@ -3,23 +3,17 @@ using ltl_cloudstorage.Models;
 using ltl_cloudstorage.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ltl_cloudstorage.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : BaseController
+    public class ProfileController : BaseController
     {
         private readonly UserService _userService;
-        public UserController(CSDbContext context, UserService userService) : base(context)
+        public ProfileController(CSDbContext context, UserService userService) : base(context)
         {
             _userService = userService;
         }
@@ -31,10 +25,10 @@ namespace ltl_cloudstorage.Controllers
             User user = GetCurrentUser();
             UserInfo userInfo = await _context.UserInfos.FindAsync(user.Id);
 
-            return Ok(new { msg="Your infomation" ,user, userInfo});
+            return Ok(new { user, userInfo});
         }
-        [HttpPost("createinfo")]
-        public async Task<IActionResult> CreateInfo(UserDto userDto)
+        [HttpPost]
+        public async Task<IActionResult> Create(UserDto userDto)
         {
             try
             {
@@ -47,10 +41,10 @@ namespace ltl_cloudstorage.Controllers
 
             UserInfo userInfo = await _context.UserInfos.FindAsync(GetCurrentUser().Id);
 
-            return CreatedAtAction("CreateInfo",userInfo);       
+            return CreatedAtAction(nameof(Create),userInfo);       
         }
-        [HttpPut("updateInfo")]
-        public async Task<IActionResult> UpdateInfo(PropValueDto propValue)
+        [HttpPut]
+        public async Task<IActionResult> Update(PropValueDto propValue)
         {       
             try
             {
@@ -65,10 +59,6 @@ namespace ltl_cloudstorage.Controllers
             }    
 
             return Ok(new { msg = "Updated" });
-        }
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }

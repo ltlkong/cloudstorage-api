@@ -76,7 +76,7 @@ namespace ltl_cloudstorage.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-			bool isSuccess = await _storageService.DeleteFileByIdAsync(id);
+			bool isSuccess = await _storageService.SoftDeleteFileByIdAsync(id);
 			if(!isSuccess) 
 				return BadRequest();
 
