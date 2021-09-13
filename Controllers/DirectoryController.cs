@@ -33,10 +33,35 @@ namespace ltl_cloudstorage.Controllers
 			ICollection<LtlDirectory> directories = await _storageService.GetDirectoriesByUserIdAsync(GetCurrentUser().Id);
 			LtlDirectory directory = directories.FirstOrDefault(dir => dir.Id == id);
 
+
 			if(directory == null)
 				return NotFound();
 
-			return Ok(directory);
+			List<LtlDirectory> subDirectories = new List<LtlDirectory>();
+			await _storageService.GetSubDirectoriesByIdAsync(id, subDirectories);
+
+			return Ok(new {directory, subDirectories});
+		}
+		[HttpPost]
+		public async Task<IActionResult> CreateDirectory([Bind("Name","ParentDirId")]LtlDirectory directory)
+		{
+		
+			bool isSuccess = await _storageService.CreateDirectoryAsync(directory.Name, GetCurrentUser().Id, directory.ParentDirId);
+
+			if(!isSuccess)
+				return BadRequest();
+
+			return CreatedAtAction(nameof(CreateDirectory), new { directoryName=directory.Name});
+		}
+		[HttpPut("{id}")]
+		public async Task<IActionResult> UpdateDirectory(string name, int id)
+		{
+			LtlDirectory directory = await _context.LtlDirectories.FindAsync(id);
+			directory.Name=name;
+
+			await _context.SaveChangesAsync();
+
+			return Ok(new {msg="Updated", directory});
 		}
 
     }

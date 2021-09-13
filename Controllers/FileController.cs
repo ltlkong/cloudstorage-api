@@ -59,9 +59,9 @@ namespace ltl_cloudstorage.Controllers
             }    
         }
         [HttpPut("{id}")]
-        public IActionResult Put(LtlFile file)
+        public async Task<IActionResult> Put(LtlFile file)
         {
-			bool isSuccess = _storageService.UpdateFile(file);
+			bool isSuccess = await _storageService.UpdateFileAsync(file);
 			if(!isSuccess) 
 				return BadRequest();
 

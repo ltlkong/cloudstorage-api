@@ -36,7 +36,8 @@ do
 		"authData")
 			echo $token
 			echo $baseUrl
-			curl -X GET $baseUrl/api/auth -H "Authorization: Bearer $token" --insecure
+			data=$(curl -X GET $baseUrl/api/auth -H "Authorization: Bearer $token" --insecure)
+			echo $data
 			;;
 	esac
 done

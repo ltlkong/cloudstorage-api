@@ -90,12 +90,13 @@ namespace ltl_cloudstorage.Services
 
             return fileBytes;
         }
-		public bool UpdateFile(LtlFile file)
+		public async Task<bool>  UpdateFileAsync(LtlFile file)
 		{
 			try
 			{
 				_context.Entry(file).State = EntityState.Modified;
 
+				await _context.SaveChangesAsync();
 				return true;
 			}catch{
 				return false;
@@ -114,7 +115,7 @@ namespace ltl_cloudstorage.Services
 			file.isDeleted = true;
 			file.DirectoryId = 1;
 			file.UniqueId = "deleted"+file.Id;
-			isSuccess = UpdateFile(file);
+			isSuccess = await UpdateFileAsync(file);
 
 			return isSuccess;
 		}
@@ -131,6 +132,8 @@ namespace ltl_cloudstorage.Services
 
 			File.Delete(FullPath(file.Path));
 			_context.Entry(file).State = EntityState.Deleted;
+
+			await _context.SaveChangesAsync();
 
 			return isSuccess;
 		}
@@ -217,5 +220,21 @@ namespace ltl_cloudstorage.Services
 
             return defaultDirectory;
         }
+
+		public async Task GetSubDirectoriesByIdAsync(int id, List<LtlDirectory> subDirectories)
+		{
+			LtlDirectory directory = await _context.LtlDirectories
+				.Include(dir => dir.ChildDirs)
+				.FirstOrDefaultAsync(dir => dir.Id==id);
+			subDirectories.AddRange(directory.ChildDirs);
+
+			if(directory.ChildDirs.Count == 0)
+				return;
+
+			foreach(LtlDirectory dir in directory.ChildDirs)
+			{
+				await GetSubDirectoriesByIdAsync(dir.Id, subDirectories);
+			}
+		}
     }
 }
