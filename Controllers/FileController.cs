@@ -52,7 +52,7 @@ namespace ltl_cloudstorage.Controllers
                     await _storageService.StoreAsync(file, GetCurrentUser().Id, directoryId);
                 }
 
-                return CreatedAtAction("PostFile", new { size, fileName = file.FileName });
+                return CreatedAtAction(nameof(UploadFile), new { size, fileName = file.FileName });
             }catch
             {
                 return BadRequest();
