@@ -43,7 +43,7 @@ namespace ltl_cloudstorage.Services
 
 			return null;
         }
-        public async Task<List<LtlFile>> SearchFilesByNameAsync(string name)
+        public async Task<ICollection<LtlFile>> SearchFilesByNameAsync(string name)
         {
             List<LtlFile> files = await _context.LtlFiles
                 .Where(f => f.Name.ToLower().Contains(name.ToLower()) && !f.isDeleted).ToListAsync();
@@ -59,16 +59,16 @@ namespace ltl_cloudstorage.Services
 		}
 
 
-        public async Task<List<LtlFile>> GetFilesByDirectoryIdAsync(int id)
+        public async Task<ICollection<LtlFile>> GetFilesByDirectoryIdAsync(int id)
         {
             List<LtlFile> files = await _context.LtlFiles
                 .Where(f => f.DirectoryId == id && !f.isDeleted).ToListAsync();
 
             return files;
         }
-        public async Task<List<LtlFile>> GetFilesByUserIdAsync(int id)
+        public async Task<ICollection<LtlFile>> GetFilesByUserIdAsync(int id)
         {
-            List<LtlDirectory> directories = await GetDirectoriesByUserIdAsync(id);
+            List<LtlDirectory> directories = (await GetDirectoriesByUserIdAsync(id)).ToList();
             List<LtlFile> files = new List<LtlFile>();
 
             foreach(LtlDirectory directory in directories)
@@ -160,7 +160,7 @@ namespace ltl_cloudstorage.Services
     {
         public async Task<bool> CreateDirectoryAsync(string name, int userId, int? parentDirId)
         {
-            List<LtlDirectory> directories = await GetDirectoryByNameAsync(name);
+            ICollection<LtlDirectory> directories = await GetDirectoryByNameAsync(name);
 			// Get the same layer dirs
 			List<LtlDirectory> dirsFiltered = directories
 				.Where(dir => dir.Name.Equals(name) && dir.UserInfoId == userId && dir.ParentDirId == parentDirId)
@@ -176,27 +176,27 @@ namespace ltl_cloudstorage.Services
 
             return true;
         }
-        public async Task<List<LtlDirectory>> GetDirectoriesByUserIdAsync(int id)
+        public async Task<ICollection<LtlDirectory>> GetDirectoriesByUserIdAsync(int id)
         {
             List<LtlDirectory> directories = await _context.LtlDirectories
                 .Where(d => d.UserInfoId == id).ToListAsync();
 
             return directories;
         }
-        public async Task<List<LtlDirectory>> SearchDirectoryByNameAsync(string name)
+        public async Task<ICollection<LtlDirectory>> SearchDirectoryByNameAsync(string name)
         {
             List<LtlDirectory> directories = await _context.LtlDirectories
                 .Where(d => d.Name.ToLower().Equals(name.ToLower())).ToListAsync();
 
             return directories;
         }
-        public async Task<List<LtlDirectory>> GetDirectoryByNameAsync(string name)
+        public async Task<ICollection<LtlDirectory>> GetDirectoryByNameAsync(string name)
         {
             List<LtlDirectory> directories = await _context.LtlDirectories.Where(d => d.Name.Equals(name)).ToListAsync();
 
             return directories;
         }
-        public LtlDirectory GetDirectoryByName(string name, List<LtlDirectory> directories)
+        public LtlDirectory GetDirectoryByName(string name, ICollection<LtlDirectory> directories)
         {
             LtlDirectory directory = directories.FirstOrDefault(d => d.Name.Equals(name));
 
@@ -204,7 +204,7 @@ namespace ltl_cloudstorage.Services
         }
         public async Task<LtlDirectory> GetDefaultDirectoryByUserIdAsync(int id)
         {
-            List<LtlDirectory> directories = await GetDirectoriesByUserIdAsync(id);
+            ICollection<LtlDirectory> directories = await GetDirectoriesByUserIdAsync(id);
             LtlDirectory defaultDirectory = GetDirectoryByName("Default", directories);
 
             if(defaultDirectory == null)

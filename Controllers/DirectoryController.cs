@@ -2,8 +2,9 @@ using ltl_cloudstorage.Models;
 using ltl_cloudstorage.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace ltl_cloudstorage.Controllers
 {
@@ -17,6 +18,26 @@ namespace ltl_cloudstorage.Controllers
         {
             _storageService = storageService;
         }
+
+		[HttpGet]
+		public async Task<IActionResult> GetAllDirectories()
+		{
+			ICollection<LtlDirectory> directories = await _storageService.GetDirectoriesByUserIdAsync(GetCurrentUser().Id);
+
+			return Ok(directories);
+		}
+
+		[HttpGet("{id}")]
+		public async Task<IActionResult> GetDirectoryById(int id)
+		{
+			ICollection<LtlDirectory> directories = await _storageService.GetDirectoriesByUserIdAsync(GetCurrentUser().Id);
+			LtlDirectory directory = directories.FirstOrDefault(dir => dir.Id == id);
+
+			if(directory == null)
+				return NotFound();
+
+			return Ok(directory);
+		}
 
     }
 }

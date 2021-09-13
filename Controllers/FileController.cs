@@ -25,7 +25,7 @@ namespace ltl_cloudstorage.Controllers
 		public async Task<IActionResult> GetFileBy(int id)
 		{
 			LtlFile file = await _storageService.GetFileByIdAsync(id);
-			List<LtlFile> files = await _storageService.GetFilesByUserIdAsync(GetCurrentUser().Id);
+			ICollection<LtlFile> files = await _storageService.GetFilesByUserIdAsync(GetCurrentUser().Id);
 
 			LtlFile isExitsInUserFiles = files.FirstOrDefault(f => f.Id == file.Id);
 			if(isExitsInUserFiles == null)
@@ -36,7 +36,7 @@ namespace ltl_cloudstorage.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllFiles()
         {
-            List<LtlFile> files = await _storageService.GetFilesByUserIdAsync(GetCurrentUser().Id);
+            ICollection<LtlFile> files = await _storageService.GetFilesByUserIdAsync(GetCurrentUser().Id);
 
             return Ok(files);
         }

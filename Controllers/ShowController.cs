@@ -28,7 +28,7 @@ namespace ltl_cloudstorage.Controllers
         {
 			if(!String.IsNullOrEmpty(type) && !String.IsNullOrEmpty(value))
 			{
-            	List<LtlFile> files = new List<LtlFile>();
+            	ICollection<LtlFile> files = new List<LtlFile>();
 
 				switch(type)
 				{
