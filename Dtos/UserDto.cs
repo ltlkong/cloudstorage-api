@@ -9,8 +9,7 @@ namespace ltl_cloudstorage.Dtos
     {
         public string DisplayName { get; set; }
         public string Email { get; set; }
-        public byte[] Avatar { get; set; }
-        public string Reputation { get; set; }
+        public string Avatar { get; set; }
         public string Introduction { get; set; }
     }
 }

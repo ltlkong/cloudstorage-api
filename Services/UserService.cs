@@ -41,7 +41,7 @@ namespace ltl_cloudstorage.Services
             prop = WordFirstCharToUpper(prop);
             string[] editableProps =
             {
-                "Description", "Email", "Name", "Reputation", "Introduction","DisplayName"
+                "Description", "Email", "Name", "Introduction","DisplayName"
             };
            
             UserInfo userInfo = await _context.UserInfos.FindAsync(currentUser.Id);
