@@ -22,26 +22,25 @@ namespace ltl_cloudstorage.Controllers
             _storageService = storageService;
         }
 		[HttpGet("{id}")]
-		public async Task<IActionResult> GetFileBy(int id)
+		public async Task<IActionResult> GetBy(int id)
 		{
+			bool isExitsInUserFiles = await _storageService.CheckIsUserFileAsync(id, GetCurrentUser().Id);
 			LtlFile file = await _storageService.GetFileByIdAsync(id);
-			ICollection<LtlFile> files = await _storageService.GetFilesByUserIdAsync(GetCurrentUser().Id);
 
-			LtlFile isExitsInUserFiles = files.FirstOrDefault(f => f.Id == file.Id);
-			if(isExitsInUserFiles == null)
+			if(!isExitsInUserFiles)
 				return NotFound();
 
 			return Ok(file);
 		}
         [HttpGet]
-        public async Task<IActionResult> GetAllFiles()
+        public async Task<IActionResult> Get()
         {
             ICollection<LtlFile> files = await _storageService.GetFilesByUserIdAsync(GetCurrentUser().Id);
 
             return Ok(files);
         }
         [HttpPost]
-        public async Task<IActionResult> UploadFile(IFormFile file, [FromForm]int? directoryId)
+        public async Task<IActionResult> Upload(IFormFile file, [FromForm]int? directoryId)
         {
             try
             {
@@ -51,11 +50,9 @@ namespace ltl_cloudstorage.Controllers
                 long size = file.Length;
 
                 if (file.Length > 0)
-                {
                     await _storageService.StoreAsync(file, GetCurrentUser().Id, directoryId);
-                }
 
-                return CreatedAtAction(nameof(UploadFile), new { size, fileName = file.FileName });
+                return CreatedAtAction(nameof(Upload), new { size, fileName = file.FileName });
             }catch
             {
                 return BadRequest();
@@ -65,24 +62,26 @@ namespace ltl_cloudstorage.Controllers
         public async Task<IActionResult> Put(int id, [Bind("Name","DirectoryId")]LtlFile file)
         {
 			int userId = GetCurrentUser().Id;
-			if(!await _storageService.CheckIsUserFileAsync(id, userId))
-				return NotFound();
-			if(!await _storageService.CheckIsUserDirectoryAsync(file.DirectoryId, userId))
-				return BadRequest();
+			bool isExitsInUserFiles = await _storageService.CheckIsUserFileAsync(id,userId);
+			bool isExitsInUserDirs = await _storageService.CheckIsUserDirectoryAsync(file.DirectoryId, userId);
+
+			if(!isExitsInUserFiles) return NotFound();
+			if(!isExitsInUserDirs) return BadRequest();
 
 			LtlFile fileToUpdate = await _storageService.GetFileByIdAsync(id);
 			fileToUpdate.Name = file.Name;
 			fileToUpdate.DirectoryId = file.DirectoryId;
 			bool isSuccess = await _storageService.UpdateFileAsync(fileToUpdate);
-			if(!isSuccess) 
-				return BadRequest();
 
-			return Ok(new {msg="updated", file});
+			if(!isSuccess) return BadRequest();
+
+			return Ok(new {msg="Updated", file});
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
 			bool isSuccess = await _storageService.SoftDeleteFileByIdAsync(id);
+
 			if(!isSuccess) 
 				return BadRequest();
 

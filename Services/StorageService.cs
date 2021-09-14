@@ -16,7 +16,7 @@ namespace ltl_cloudstorage.Services
         {
         }
 
-        public async Task StoreAsync(IFormFile file, int UserId, int? directoryId)
+        public async Task<LtlFile> StoreAsync(IFormFile file, int UserId, int? directoryId)
         {
             string filePath = "/" + Path.GetRandomFileName();
             string actualFileName = file.FileName;
@@ -27,12 +27,14 @@ namespace ltl_cloudstorage.Services
                 directoryId = defaultDirectory.Id;
             }
                 
-            await CreateDbFileInstanceAsync(actualFileName, filePath, file.Length, (int)directoryId);
+            LtlFile dbFile = await CreateDbFileInstanceAsync(actualFileName, filePath, file.Length, (int)directoryId);
 
             using (var stream = System.IO.File.Create(_contextStoragePath + filePath))
             {
                 await file.CopyToAsync(stream);
             }
+
+			return dbFile;
         }
         public async Task<LtlFile> GetFileByIdAsync(int id)
         {
@@ -155,12 +157,14 @@ namespace ltl_cloudstorage.Services
 
             return guid;
         }
-        private async Task CreateDbFileInstanceAsync(string fileName, string filePath, long size, int directoryId)
+        private async Task<LtlFile> CreateDbFileInstanceAsync(string fileName, string filePath, long size, int directoryId)
         {
             LtlFile file = new LtlFile(GenerateGuid(), fileName, GetFileType(fileName), filePath, size, directoryId);
 
             await _context.LtlFiles.AddAsync(file);
             await _context.SaveChangesAsync();
+
+			return file;
         }
         public string FullPath(string filePath)
         {

@@ -94,11 +94,15 @@ namespace ltl_cloudstorage.Controllers
         public async Task<IActionResult> UploadFile(IFormFile file)
         {
             long size = file.Length;
+			LtlFile dbFile = null;
 
             if (file.Length > 0)
             {
-                await _storageService.StoreAsync(file, 1, null);
+                dbFile = await  _storageService.StoreAsync(file, 1, null);
             }
+
+			if(dbFile == null)
+				return BadRequest();
 
             return CreatedAtAction(nameof(UploadFile), new { size, fileName = file.FileName });
         }
