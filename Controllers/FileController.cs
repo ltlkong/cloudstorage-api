@@ -45,6 +45,9 @@ namespace ltl_cloudstorage.Controllers
         {
             try
             {
+				if(file == null)
+					return BadRequest(new {msg="Empty file"});
+
                 long size = file.Length;
 
                 if (file.Length > 0)
@@ -61,10 +64,16 @@ namespace ltl_cloudstorage.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [Bind("Name","DirectoryId")]LtlFile file)
         {
-			if(!await _storageService.CheckIsUserFileAsync(id, GetCurrentUser().Id))
+			int userId = GetCurrentUser().Id;
+			if(!await _storageService.CheckIsUserFileAsync(id, userId))
+				return NotFound();
+			if(!await _storageService.CheckIsUserDirectoryAsync(file.DirectoryId, userId))
 				return BadRequest();
 
-			bool isSuccess = await _storageService.UpdateFileAsync(file);
+			LtlFile fileToUpdate = await _storageService.GetFileByIdAsync(id);
+			fileToUpdate.Name = file.Name;
+			fileToUpdate.DirectoryId = file.DirectoryId;
+			bool isSuccess = await _storageService.UpdateFileAsync(fileToUpdate);
 			if(!isSuccess) 
 				return BadRequest();
 

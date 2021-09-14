@@ -62,7 +62,7 @@ namespace ltl_cloudstorage.Services
 		{
 			ICollection<LtlFile> files = await GetFilesByUserIdAsync(userId);
 			
-			if(files.FirstOrDefault(f => f.Id == fileId) != null)
+			if(files.SingleOrDefault(f => f.Id == fileId) != null)
 				return true;
 
 			return false;
@@ -174,12 +174,11 @@ namespace ltl_cloudstorage.Services
         public async Task<bool> CreateDirectoryAsync(string name, int userId, int? parentDirId)
         {
             ICollection<LtlDirectory> directories = await GetDirectoryByNameAsync(name);
-			// Get the same layer dirs
-			List<LtlDirectory> dirsFiltered = directories
-				.Where(dir => dir.Name.Equals(name) && dir.UserInfoId == userId && dir.ParentDirId == parentDirId)
-				.ToList();
+			// Get the same layer dir avoid duplicate names
+			LtlDirectory sameLayerDir= directories
+				.SingleOrDefault(dir => dir.Name.Equals(name) && dir.UserInfoId == userId && dir.ParentDirId == parentDirId);
 
-            if (dirsFiltered.Count() > 1)
+            if (sameLayerDir != null)
                 return false;
 
             LtlDirectory directory = new LtlDirectory(GenerateGuid(), name, userId, parentDirId);
@@ -222,10 +221,13 @@ namespace ltl_cloudstorage.Services
 
             if(defaultDirectory == null)
             {
-                await CreateDirectoryAsync("Default", id, null);
-            }
+                bool isSuccess = await CreateDirectoryAsync("Default", id, null);
 
-            defaultDirectory = GetDirectoryByName("Default", directories);
+				if(isSuccess)
+					defaultDirectory = GetDirectoryByName("Default", await GetDirectoriesByUserIdAsync(id));
+            }
+			else
+            	defaultDirectory = GetDirectoryByName("Default", directories);
 
             return defaultDirectory;
         }
@@ -244,6 +246,16 @@ namespace ltl_cloudstorage.Services
 			{
 				await GetSubDirectoriesByIdAsync(dir.Id, subDirectories);
 			}
+		}
+
+		public async Task<bool> CheckIsUserDirectoryAsync(int directoryId, int userId)
+		{
+			ICollection<LtlDirectory> directories = await GetDirectoriesByUserIdAsync(userId);
+			
+			if(directories.SingleOrDefault(dir => dir.Id == directoryId) != null)
+				return true;
+
+			return false;
 		}
     }
 }
