@@ -15,6 +15,8 @@ using System;
 using System.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace ltl_cloudstorage
 {
@@ -57,6 +59,22 @@ namespace ltl_cloudstorage
             });
 
             services.AddControllers();
+
+			services.Configure<IISServerOptions>(options =>
+			{
+				options.MaxRequestBodySize = long.MaxValue;
+			});
+
+
+			services.Configure<KestrelServerOptions>(options =>
+			{
+				options.Limits.MaxRequestBodySize = long.MaxValue; 
+			});
+
+			services.Configure<FormOptions>(options =>
+			{
+				options.MultipartBodyLengthLimit = long.MaxValue;
+			});
 
             services.AddSwaggerGen(c =>
             {

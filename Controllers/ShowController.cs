@@ -18,6 +18,7 @@ namespace ltl_cloudstorage.Controllers
     public class ShowController : BaseController
     {
 		private readonly StorageService _storageService;
+		private const long MaxFileSize = 1L * 1024L * 1024L * 1024L;
 
         public ShowController(CSDbContext context, StorageService storageService) : base(context){
 			_storageService = storageService;
@@ -52,10 +53,13 @@ namespace ltl_cloudstorage.Controllers
 			return BadRequest();
         }
 
-		[HttpGet("file/entity")]
+		[HttpGet("file/{uniqueId}/entity")]
 		public async Task<IActionResult> GetFileEntityByUniqueId(string uniqueId)
 		{
 			LtlFile file = await _storageService.SearchFileByUniqueIdAsync(uniqueId);
+
+			if(file == null)
+				return NotFound();
 
 			Byte[] fileBytes = await _storageService.GetFileBytesAsync(file.Path);
 
@@ -72,6 +76,20 @@ namespace ltl_cloudstorage.Controllers
 			return Ok(files);
 		}
 
+		[HttpGet("file/{uniqueId}")]
+		public async Task<IActionResult> GetFileByUniqueId(string uniqueId)
+		{
+			LtlFile file = await _storageService.SearchFileByUniqueIdAsync(uniqueId);
+
+			if(file == null)
+				return NotFound();
+
+			return Ok(file);
+		}
+
+		// Large file ref: https://stackoverflow.com/questions/62502286/uploading-and-downloading-large-files-in-asp-net-core-3-1
+		[RequestSizeLimit(MaxFileSize)]
+		[RequestFormLimits(MultipartBodyLengthLimit = MaxFileSize)]
         [HttpPost("file")]
         public async Task<IActionResult> UploadFile(IFormFile file)
         {

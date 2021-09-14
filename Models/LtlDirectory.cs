@@ -30,12 +30,15 @@ namespace ltl_cloudstorage.Models
         public DateTime CreatedAt { get; set; }
         [ForeignKey("UserInfo")]
         public int UserInfoId { get; set; }
+		[JsonIgnore]
         public UserInfo UserInfo { get; set; }
 		[ForeignKey("LtlDirectory")]
 		public int? ParentDirId { get; set; }
 		[JsonIgnore]
 		public LtlDirectory ParentDir { get; set; }
+		[JsonIgnore]
         public virtual ICollection<LtlFile> Files { get; set; }
+		[JsonIgnore]
 		public virtual ICollection<LtlDirectory> ChildDirs { get; set; }
         
     }
