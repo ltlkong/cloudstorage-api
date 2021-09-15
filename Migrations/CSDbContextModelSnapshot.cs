@@ -84,7 +84,7 @@ namespace ltl_cloudstorage.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2021, 9, 15, 9, 1, 6, 408, DateTimeKind.Local).AddTicks(3112),
+                            CreatedAt = new DateTime(2021, 9, 15, 9, 10, 33, 417, DateTimeKind.Local).AddTicks(2266),
                             Name = "Default",
                             ProfileId = 1,
                             UniqueId = "13c44ee6-0628-4cfc-9690-5c6bfb357df6"
@@ -211,10 +211,10 @@ namespace ltl_cloudstorage.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2021, 9, 15, 9, 1, 6, 408, DateTimeKind.Local).AddTicks(146),
+                            CreatedAt = new DateTime(2021, 9, 15, 9, 10, 33, 416, DateTimeKind.Local).AddTicks(9105),
                             Introduction = "# Public test user",
                             Reputation = 100,
-                            UpdatedAt = new DateTime(2021, 9, 15, 9, 1, 6, 408, DateTimeKind.Local).AddTicks(1108)
+                            UpdatedAt = new DateTime(2021, 9, 15, 9, 10, 33, 417, DateTimeKind.Local).AddTicks(148)
                         });
                 });
 
@@ -284,10 +284,10 @@ namespace ltl_cloudstorage.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2021, 9, 15, 9, 1, 6, 407, DateTimeKind.Local).AddTicks(9513),
+                            CreatedAt = new DateTime(2021, 9, 15, 9, 10, 33, 416, DateTimeKind.Local).AddTicks(8416),
                             DisplayName = "public",
                             Email = "public@public.com",
-                            LastLoginAt = new DateTime(2021, 9, 15, 9, 1, 6, 407, DateTimeKind.Local).AddTicks(9528),
+                            LastLoginAt = new DateTime(2021, 9, 15, 9, 10, 33, 416, DateTimeKind.Local).AddTicks(8433),
                             Name = "public",
                             PasswordHash = "public"
                         },

@@ -11,7 +11,7 @@ namespace ltl_cloudstorage.Services
 {
     public partial class StorageService : BaseService
     {
-        private readonly string _contextStoragePath = System.IO.Directory.GetCurrentDirectory() + "/Storage";
+        private readonly string _contextStoragePath = Directory.GetCurrentDirectory() + "/Storage";
 
         public StorageService(CSDbContext context) : base(context)
         {}

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.IO;
 
 namespace ltl_cloudstorage.Models
 {
@@ -26,7 +27,17 @@ namespace ltl_cloudstorage.Models
             this.SeedMemberships(builder);
             this.SeedPublicInfo(builder);
             this.SeedUsers(builder);
+			this.CreateStorageDirectory();
         }
+
+		private void CreateStorageDirectory()
+		{
+			
+			string contextStoragePath = Directory.GetCurrentDirectory() + "/Storage";
+
+			if(!Directory.Exists(contextStoragePath))
+				Directory.CreateDirectory(contextStoragePath);
+		}
 
         private void SeedMemberships(ModelBuilder builder)
         {

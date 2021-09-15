@@ -195,7 +195,7 @@ namespace ltl_cloudstorage.Migrations
                 columns: new[] { "Id", "Avatar", "CreatedAt", "DisplayName", "Email", "LastLoginAt", "Name", "PasswordHash" },
                 values: new object[,]
                 {
-                    { 1, null, new DateTime(2021, 9, 15, 9, 1, 6, 407, DateTimeKind.Local).AddTicks(9513), "public", "public@public.com", new DateTime(2021, 9, 15, 9, 1, 6, 407, DateTimeKind.Local).AddTicks(9528), "public", "public" },
+                    { 1, null, new DateTime(2021, 9, 15, 9, 10, 33, 416, DateTimeKind.Local).AddTicks(8416), "public", "public@public.com", new DateTime(2021, 9, 15, 9, 10, 33, 416, DateTimeKind.Local).AddTicks(8433), "public", "public" },
                     { 2, null, new DateTime(2021, 7, 26, 23, 0, 48, 0, DateTimeKind.Unspecified), "ltl", "tielinli@yahoo.com", new DateTime(2021, 7, 27, 8, 19, 4, 0, DateTimeKind.Unspecified), "ltl", "oIn5JKeGBFsnpRAekK4jTQ==" },
                     { 3, null, new DateTime(2021, 7, 27, 7, 11, 41, 0, DateTimeKind.Unspecified), "LisaLee", "1248988727@qq.com", new DateTime(2021, 7, 27, 7, 11, 41, 0, DateTimeKind.Unspecified), "LisaLee", "eMoP6zKEDM9eDMEYtFm4VA==" }
                 });
@@ -203,12 +203,12 @@ namespace ltl_cloudstorage.Migrations
             migrationBuilder.InsertData(
                 table: "Profiles",
                 columns: new[] { "Id", "CreatedAt", "Introduction", "Reputation", "UpdatedAt" },
-                values: new object[] { 1, new DateTime(2021, 9, 15, 9, 1, 6, 408, DateTimeKind.Local).AddTicks(146), "# Public test user", 100, new DateTime(2021, 9, 15, 9, 1, 6, 408, DateTimeKind.Local).AddTicks(1108) });
+                values: new object[] { 1, new DateTime(2021, 9, 15, 9, 10, 33, 416, DateTimeKind.Local).AddTicks(9105), "# Public test user", 100, new DateTime(2021, 9, 15, 9, 10, 33, 417, DateTimeKind.Local).AddTicks(148) });
 
             migrationBuilder.InsertData(
                 table: "LtlDirectories",
                 columns: new[] { "Id", "CreatedAt", "Name", "ParentDirId", "ProfileId", "UniqueId" },
-                values: new object[] { 1, new DateTime(2021, 9, 15, 9, 1, 6, 408, DateTimeKind.Local).AddTicks(3112), "Default", null, 1, "13c44ee6-0628-4cfc-9690-5c6bfb357df6" });
+                values: new object[] { 1, new DateTime(2021, 9, 15, 9, 10, 33, 417, DateTimeKind.Local).AddTicks(2266), "Default", null, 1, "13c44ee6-0628-4cfc-9690-5c6bfb357df6" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_LtlDirectories_ParentDirId",
