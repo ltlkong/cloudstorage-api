@@ -21,6 +21,7 @@ namespace ltl_cloudstorage.Models
             Size = size;
             DirectoryId = directoryId;
 			isDeleted = false;
+			CreatedAt = DateTime.Now;
         }
 
         public int Id { get; set; }
@@ -35,6 +36,8 @@ namespace ltl_cloudstorage.Models
 		[JsonIgnore]
 		public bool isDeleted { get; set;}
         public long Size { get; set; }
+		[Required]
+		public DateTime CreatedAt { get; set; }
         [ForeignKey("Directory")]
         public int DirectoryId { get; set; }
         [JsonIgnore]

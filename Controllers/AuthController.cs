@@ -82,15 +82,14 @@ namespace ltl_cloudstorage.Controllers
         {
             // Get user and information.
             User user = GetCurrentUser();
-            string membershipColor = user.Membership?.Color;
 
             var authUser = new
             {
                 name=user.Name,
                 displayName=user.DisplayName,
-                membershipColor=membershipColor,
                 roles=user.Roles,
-                avatar=user.Avatar
+                avatar=user.Avatar,
+				memberships = user.Memberships
             };
 
             return Ok(new { msg = "Your infomation", user=authUser });

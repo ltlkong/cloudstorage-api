@@ -30,17 +30,17 @@ namespace ltl_cloudstorage.Models
         public DateTime CreatedAt { get; set; }
         [Required]
         public DateTime LastLoginAt { get; set; }
-        public virtual Membership Membership { get; set; }
-        public int? MembershipId { get; set; }
+        public virtual ICollection<Membership> Memberships { get; set; }
         public virtual ICollection<Role> Roles { get; set; }
         public User()
         {
             CreatedAt = DateTime.Now;
             Roles = new HashSet<Role>();
+			Memberships = new HashSet<Membership>();
         }
     }
 
-    public class UserInfo
+    public class Profile
     {
         [JsonIgnore]
         [ForeignKey("User")]
@@ -55,11 +55,10 @@ namespace ltl_cloudstorage.Models
         public DateTime UpdatedAt { get; set; }
         [JsonIgnore]
         public virtual User User { get; set; }
-        public virtual ICollection<LtlDirectory> LtlDirectories { get; set; }
-        public UserInfo()
+        public Profile()
         {
             CreatedAt = DateTime.Now;
-            LtlDirectories = new HashSet<LtlDirectory>();
+			UpdatedAt = DateTime.Now;
         }
     }
 

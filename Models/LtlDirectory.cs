@@ -12,11 +12,11 @@ namespace ltl_cloudstorage.Models
     [Index(nameof(UniqueId), IsUnique = true)]
     public class LtlDirectory
     {
-        public LtlDirectory(string uniqueId, string name, int userInfoId, int? parentDirId)
+        public LtlDirectory(string uniqueId, string name, int profileId, int? parentDirId)
         {
             UniqueId = uniqueId;
             Name = name;
-            UserInfoId = userInfoId;
+            ProfileId = profileId;
 			ParentDirId = parentDirId;
             CreatedAt = DateTime.Now;
             Files = new HashSet<LtlFile>();
@@ -28,10 +28,10 @@ namespace ltl_cloudstorage.Models
         public string Name { get; set; }
         [JsonIgnore]
         public DateTime CreatedAt { get; set; }
-        [ForeignKey("UserInfo")]
-        public int UserInfoId { get; set; }
+        [ForeignKey("Profile")]
+        public int ProfileId { get; set; }
 		[JsonIgnore]
-        public virtual UserInfo UserInfo { get; set; }
+        public virtual Profile UserInfo { get; set; }
 		[ForeignKey("LtlDirectory")]
 		public int? ParentDirId { get; set; }
 		[JsonIgnore]

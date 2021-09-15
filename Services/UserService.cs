@@ -23,17 +23,16 @@ namespace ltl_cloudstorage.Services
         }
         public async Task CreateInfoAsync(int userId ,UserDto userDto)
         {
-            UserInfo userInfo = new UserInfo()
+            Profile profile = new Profile()
             {
                 Id=userId,
                 Introduction = userDto.Introduction
             };
 
             //Default values
-            userInfo.UpdatedAt = DateTime.Now;
-            userInfo.Reputation = 50;
+            profile.Reputation = 50;
 
-            await _context.UserInfos.AddAsync(userInfo);
+            await _context.Profiles.AddAsync(profile);
             await _context.SaveChangesAsync();
         }
         public async Task<bool> UpdateInfoAsync(User currentUser, string prop, string value)
@@ -44,7 +43,7 @@ namespace ltl_cloudstorage.Services
                 "Description", "Email", "Name", "Introduction","DisplayName"
             };
            
-            UserInfo userInfo = await _context.UserInfos.FindAsync(currentUser.Id);
+            Profile profile = await _context.Profiles.FindAsync(currentUser.Id);
 
             if (!editableProps.Contains(prop))
                 throw new InvalidOperationException("Invalid property.");
@@ -66,18 +65,18 @@ namespace ltl_cloudstorage.Services
             }
 
             // Check if the prop exits in UserInfo model
-            Type userInfoType = userInfo.GetType();
+            Type userInfoType = profile.GetType();
 
             PropertyInfo userInfoProp = userInfoType.GetProperty(prop);
             if (userInfoProp != null)
             {
                 if(prop.Equals("Reputation"))
                 {
-                    userInfoProp.SetValue(userInfo, Int32.Parse(value));
+                    userInfoProp.SetValue(profile, Int32.Parse(value));
                 }
                 else
                 {
-                    userInfoProp.SetValue(userInfo, value);
+                    userInfoProp.SetValue(profile, value);
                 }     
             }
             else
@@ -90,7 +89,7 @@ namespace ltl_cloudstorage.Services
                 return false;
             }
 
-            userInfo.UpdatedAt = DateTime.Now;
+            profile.UpdatedAt = DateTime.Now;
             await _context.SaveChangesAsync();
 
             return true;

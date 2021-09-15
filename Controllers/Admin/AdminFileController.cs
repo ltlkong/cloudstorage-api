@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ltl_cloudstorage.Admin.Controllers 
 {
-	[Route("api/adimn/File")]
+	[Route("api/Adimn/File")]
 	[Authorize("admin")]
 	[ApiController]
 	public class AdminFileController : AdminController

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace ltl_cloudstorage.Controllers.Show
 {
-	[Route("api/show/file")]
+	[Route("api/Show/File")]
 	[ApiController]
     public class ShowFileController : ShowController
     {

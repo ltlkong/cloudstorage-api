@@ -9,15 +9,30 @@ using ltl_cloudstorage.Models;
 namespace ltl_cloudstorage.Migrations
 {
     [DbContext(typeof(CSDbContext))]
-    [Migration("20210912234626_SeedInitialDir")]
-    partial class SeedInitialDir
+    [Migration("20210915160106_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
-                .HasAnnotation("ProductVersion", "5.0.7");
+                .HasAnnotation("ProductVersion", "5.0.10");
+
+            modelBuilder.Entity("MembershipUser", b =>
+                {
+                    b.Property<int>("MembershipsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsersId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MembershipsId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("MembershipUser");
+                });
 
             modelBuilder.Entity("RoleUser", b =>
                 {
@@ -50,20 +65,20 @@ namespace ltl_cloudstorage.Migrations
                     b.Property<int?>("ParentDirId")
                         .HasColumnType("int");
 
+                    b.Property<int>("ProfileId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UniqueId")
                         .HasColumnType("varchar(767)");
-
-                    b.Property<int>("UserInfoId")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ParentDirId");
 
+                    b.HasIndex("ProfileId");
+
                     b.HasIndex("UniqueId")
                         .IsUnique();
-
-                    b.HasIndex("UserInfoId");
 
                     b.ToTable("LtlDirectories");
 
@@ -71,10 +86,10 @@ namespace ltl_cloudstorage.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2021, 9, 12, 16, 46, 25, 619, DateTimeKind.Local).AddTicks(5244),
+                            CreatedAt = new DateTime(2021, 9, 15, 9, 1, 6, 408, DateTimeKind.Local).AddTicks(3112),
                             Name = "Default",
-                            UniqueId = "13c44ee6-0628-4cfc-9690-5c6bfb357df6",
-                            UserInfoId = 1
+                            ProfileId = 1,
+                            UniqueId = "13c44ee6-0628-4cfc-9690-5c6bfb357df6"
                         });
                 });
 
@@ -83,6 +98,9 @@ namespace ltl_cloudstorage.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime");
 
                     b.Property<int>("DirectoryId")
                         .HasColumnType("int");
@@ -170,6 +188,38 @@ namespace ltl_cloudstorage.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ltl_cloudstorage.Models.Profile", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Introduction")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Reputation")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Profiles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2021, 9, 15, 9, 1, 6, 408, DateTimeKind.Local).AddTicks(146),
+                            Introduction = "# Public test user",
+                            Reputation = 100,
+                            UpdatedAt = new DateTime(2021, 9, 15, 9, 1, 6, 408, DateTimeKind.Local).AddTicks(1108)
+                        });
+                });
+
             modelBuilder.Entity("ltl_cloudstorage.Models.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -213,9 +263,6 @@ namespace ltl_cloudstorage.Migrations
                     b.Property<DateTime>("LastLoginAt")
                         .HasColumnType("datetime");
 
-                    b.Property<int?>("MembershipId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -230,8 +277,6 @@ namespace ltl_cloudstorage.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.HasIndex("MembershipId");
-
                     b.HasIndex("Name")
                         .IsUnique();
 
@@ -241,11 +286,10 @@ namespace ltl_cloudstorage.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2021, 9, 12, 16, 46, 25, 619, DateTimeKind.Local).AddTicks(1058),
+                            CreatedAt = new DateTime(2021, 9, 15, 9, 1, 6, 407, DateTimeKind.Local).AddTicks(9513),
                             DisplayName = "public",
                             Email = "public@public.com",
-                            LastLoginAt = new DateTime(2021, 9, 12, 16, 46, 25, 619, DateTimeKind.Local).AddTicks(1077),
-                            MembershipId = 1,
+                            LastLoginAt = new DateTime(2021, 9, 15, 9, 1, 6, 407, DateTimeKind.Local).AddTicks(9528),
                             Name = "public",
                             PasswordHash = "public"
                         },
@@ -256,7 +300,6 @@ namespace ltl_cloudstorage.Migrations
                             DisplayName = "ltl",
                             Email = "tielinli@yahoo.com",
                             LastLoginAt = new DateTime(2021, 7, 27, 8, 19, 4, 0, DateTimeKind.Unspecified),
-                            MembershipId = 2,
                             Name = "ltl",
                             PasswordHash = "oIn5JKeGBFsnpRAekK4jTQ=="
                         },
@@ -267,42 +310,24 @@ namespace ltl_cloudstorage.Migrations
                             DisplayName = "LisaLee",
                             Email = "1248988727@qq.com",
                             LastLoginAt = new DateTime(2021, 7, 27, 7, 11, 41, 0, DateTimeKind.Unspecified),
-                            MembershipId = 2,
                             Name = "LisaLee",
                             PasswordHash = "eMoP6zKEDM9eDMEYtFm4VA=="
                         });
                 });
 
-            modelBuilder.Entity("ltl_cloudstorage.Models.UserInfo", b =>
+            modelBuilder.Entity("MembershipUser", b =>
                 {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
+                    b.HasOne("ltl_cloudstorage.Models.Membership", null)
+                        .WithMany()
+                        .HasForeignKey("MembershipsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("Introduction")
-                        .HasColumnType("text");
-
-                    b.Property<int>("Reputation")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("UserInfos");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2021, 9, 12, 16, 46, 25, 619, DateTimeKind.Local).AddTicks(2375),
-                            Introduction = "# Public test user",
-                            Reputation = 100,
-                            UpdatedAt = new DateTime(2021, 9, 12, 16, 46, 25, 619, DateTimeKind.Local).AddTicks(3384)
-                        });
+                    b.HasOne("ltl_cloudstorage.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("RoleUser", b =>
@@ -326,9 +351,9 @@ namespace ltl_cloudstorage.Migrations
                         .WithMany("ChildDirs")
                         .HasForeignKey("ParentDirId");
 
-                    b.HasOne("ltl_cloudstorage.Models.UserInfo", "UserInfo")
-                        .WithMany("LtlDirectories")
-                        .HasForeignKey("UserInfoId")
+                    b.HasOne("ltl_cloudstorage.Models.Profile", "UserInfo")
+                        .WithMany()
+                        .HasForeignKey("ProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -348,16 +373,7 @@ namespace ltl_cloudstorage.Migrations
                     b.Navigation("Directory");
                 });
 
-            modelBuilder.Entity("ltl_cloudstorage.Models.User", b =>
-                {
-                    b.HasOne("ltl_cloudstorage.Models.Membership", "Membership")
-                        .WithMany()
-                        .HasForeignKey("MembershipId");
-
-                    b.Navigation("Membership");
-                });
-
-            modelBuilder.Entity("ltl_cloudstorage.Models.UserInfo", b =>
+            modelBuilder.Entity("ltl_cloudstorage.Models.Profile", b =>
                 {
                     b.HasOne("ltl_cloudstorage.Models.User", "User")
                         .WithMany()
@@ -373,11 +389,6 @@ namespace ltl_cloudstorage.Migrations
                     b.Navigation("ChildDirs");
 
                     b.Navigation("Files");
-                });
-
-            modelBuilder.Entity("ltl_cloudstorage.Models.UserInfo", b =>
-                {
-                    b.Navigation("LtlDirectories");
                 });
 #pragma warning restore 612, 618
         }

@@ -6,7 +6,7 @@ namespace ltl_cloudstorage.Models
     public class CSDbContext : DbContext
     {
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<UserInfo> UserInfos { get; set; }
+        public virtual DbSet<Profile> Profiles { get; set; }
         public virtual DbSet<Membership> Memberships { get; set; }
         public virtual DbSet<LtlDirectory> LtlDirectories { get; set; }
         public virtual DbSet<LtlFile> LtlFiles { get; set; }
@@ -76,7 +76,6 @@ namespace ltl_cloudstorage.Models
                     PasswordHash = "oIn5JKeGBFsnpRAekK4jTQ==",
                     CreatedAt = DateTime.Parse("2021-07-26 23:00:48"),
                     LastLoginAt = DateTime.Parse("2021-07-27 08:19:04"),
-                    MembershipId =2
                 },
 
                 new User()
@@ -88,7 +87,6 @@ namespace ltl_cloudstorage.Models
                     PasswordHash = "eMoP6zKEDM9eDMEYtFm4VA==",
                     CreatedAt = DateTime.Parse("2021-07-27 07:11:41"),
                     LastLoginAt = DateTime.Parse("2021-07-27 07:11:41"),
-                    MembershipId = 2
                 }
             };
 
@@ -106,10 +104,9 @@ namespace ltl_cloudstorage.Models
 				PasswordHash = "public",
 				CreatedAt = DateTime.Now,
 				LastLoginAt = DateTime.Now,
-				MembershipId = 1
 			};
 
-            UserInfo publicInfo = new UserInfo() 
+            Profile publicInfo = new Profile() 
             {
                 Id=1,
                 Reputation = 100,
@@ -121,7 +118,7 @@ namespace ltl_cloudstorage.Models
 			publicDir.Id = 1;
 
 			builder.Entity<User>().HasData(publicUser);
-            builder.Entity<UserInfo>().HasData(publicInfo);
+            builder.Entity<Profile>().HasData(publicInfo);
 			builder.Entity<LtlDirectory>().HasData(publicDir);
         }
     }

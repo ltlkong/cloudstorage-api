@@ -21,5 +21,11 @@ namespace ltl_cloudstorage.Models
         public string Description { get; set; }
         [Required]
         public double Price { get; set; }
+		[JsonIgnore]
+		public virtual ICollection<User> Users { get; set; }
+		public Membership() 
+		{
+			Users = new HashSet<User>();
+		}
     }
 }

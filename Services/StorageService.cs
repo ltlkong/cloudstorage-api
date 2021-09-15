@@ -186,7 +186,7 @@ namespace ltl_cloudstorage.Services
             ICollection<LtlDirectory> directories = await GetDirectoryByNameAsync(name);
 			// Get the same layer dir avoid duplicate names
 			LtlDirectory sameLayerDir= directories
-				.SingleOrDefault(dir => dir.Name.Equals(name) && dir.UserInfoId == userId && dir.ParentDirId == parentDirId);
+				.SingleOrDefault(dir => dir.Name.Equals(name) && dir.ProfileId == userId && dir.ParentDirId == parentDirId);
 
             if (sameLayerDir != null)
                 return false;
@@ -201,7 +201,7 @@ namespace ltl_cloudstorage.Services
         public async Task<ICollection<LtlDirectory>> GetDirectoriesByUserIdAsync(int id)
         {
             List<LtlDirectory> directories = await _context.LtlDirectories
-                .Where(d => d.UserInfoId == id).ToListAsync();
+                .Where(d => d.ProfileId == id).ToListAsync();
 
             return directories;
         }

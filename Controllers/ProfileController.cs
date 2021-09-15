@@ -23,9 +23,9 @@ namespace ltl_cloudstorage.Controllers
         {
             // Get user and information.
             User user = GetCurrentUser();
-            UserInfo userInfo = await _context.UserInfos.FindAsync(user.Id);
+            Profile profile = await _context.Profiles.FindAsync(user.Id);
 
-            return Ok(new { user, userInfo});
+            return Ok(new { user, profile});
         }
         [HttpPost]
         public async Task<IActionResult> Create(UserDto userDto)
@@ -39,9 +39,9 @@ namespace ltl_cloudstorage.Controllers
                 return BadRequest();
             }
 
-            UserInfo userInfo = await _context.UserInfos.FindAsync(GetCurrentUser().Id);
+            Profile profile = await _context.Profiles.FindAsync(GetCurrentUser().Id);
 
-            return CreatedAtAction(nameof(Create),userInfo);       
+            return CreatedAtAction(nameof(Create),profile);       
         }
         [HttpPut]
         public async Task<IActionResult> Update(PropValueDto propValue)
