@@ -25,30 +25,31 @@ namespace ltl_cloudstorage.Controllers.Show
         [HttpGet("search")]
         public async Task<IActionResult> GetFileBy(string type, string value)
         {
-			if(!String.IsNullOrEmpty(type) && !String.IsNullOrEmpty(value))
+			if(String.IsNullOrEmpty(type) || String.IsNullOrEmpty(value))
+				return BadRequest();
+
+			ICollection<LtlFile> files = new List<LtlFile>();
+
+			switch(type)
 			{
-            	ICollection<LtlFile> files = new List<LtlFile>();
-
-				switch(type)
-				{
-					case "name":
-            			files = await _storageService.SearchFilesByNameAsync(value);
-						break;
-					case "id":
-						LtlFile file = await _storageService.SearchFileByUniqueIdAsync(value);
-						if(file != null)
-							files.Add(file);
-						break;
-					default:
-						break;
-				}
-
-				if(files.Count == 0)
-					return NotFound();
-				return Ok(files);
+				case "name":
+					files = await _storageService.SearchFilesByNameAsync(value);
+					break;
+				case "id":
+					LtlFile file = await _storageService.SearchFileByUniqueIdAsync(value);
+					if(file != null)
+						files.Add(file);
+					break;
+				case "type":
+					files = await _storageService.SearchFileByMimetypeAsync(value);
+					break;
+				default:
+					break;
 			}
 
-			return BadRequest();
+			if(files.Count == 0)
+				return NotFound();
+			return Ok(files);
         }
 
 		[HttpGet("{uniqueId}/entity")]

@@ -56,6 +56,15 @@ namespace ltl_cloudstorage.Services
             return files;
         }
 
+		public async Task<ICollection<LtlFile>> SearchFileByMimetypeAsync(string type)
+		{
+			List<LtlFile> files = await _context.LtlFiles
+				.Where(f => f.Type.ToLower().Contains(type.ToLower()) && !f.isDeleted)
+				.ToListAsync();
+
+			return files;
+		}
+
 		public async Task<LtlFile> SearchFileByUniqueIdAsync(string uniqueId)
 		{
 			LtlFile file = await _context.LtlFiles
