@@ -18,6 +18,7 @@ using System.Text;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore.Proxies;
+using System.IO;
 
 namespace ltl_cloudstorage
 {
@@ -96,8 +97,7 @@ namespace ltl_cloudstorage
 
             services.AddScoped<StorageService>();
            
-
-            
+			CreateStorageDirectory();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -125,5 +125,14 @@ namespace ltl_cloudstorage
                 endpoints.MapControllers();
             });
         }
+
+		private void CreateStorageDirectory()
+		{
+			
+			string contextStoragePath = Directory.GetCurrentDirectory() + "/Storage";
+
+			if(!Directory.Exists(contextStoragePath))
+				Directory.CreateDirectory(contextStoragePath);
+		}
     }
 }
