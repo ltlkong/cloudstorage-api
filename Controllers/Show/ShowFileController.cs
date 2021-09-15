@@ -11,20 +11,18 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace ltl_cloudstorage.Controllers
+namespace ltl_cloudstorage.Controllers.Show
 {
-	[Route("api/[controller]")]
+	[Route("api/show/file")]
 	[ApiController]
-    public class ShowController : BaseController
+    public class ShowFileController : ShowController
     {
-		private readonly StorageService _storageService;
 		private const long MaxFileSize = 1L * 1024L * 1024L * 1024L;
 
-        public ShowController(CSDbContext context, StorageService storageService) : base(context){
-			_storageService = storageService;
+        public ShowFileController(CSDbContext context, StorageService storageService) : base(context, storageService){
    		}
 
-        [HttpGet("file/search")]
+        [HttpGet("search")]
         public async Task<IActionResult> GetFileBy(string type, string value)
         {
 			if(!String.IsNullOrEmpty(type) && !String.IsNullOrEmpty(value))
@@ -53,7 +51,7 @@ namespace ltl_cloudstorage.Controllers
 			return BadRequest();
         }
 
-		[HttpGet("file/{uniqueId}/entity")]
+		[HttpGet("{uniqueId}/entity")]
 		public async Task<IActionResult> GetFileEntityByUniqueId(string uniqueId)
 		{
 			LtlFile file = await _storageService.SearchFileByUniqueIdAsync(uniqueId);
@@ -68,7 +66,7 @@ namespace ltl_cloudstorage.Controllers
 			return File(fileBytes, mimeType,file.Name);
 		}
 
-		[HttpGet("file")]
+		[HttpGet]
 		public async Task<IActionResult> GetAllFiles()
 		{
 			List<LtlFile> files = await _context.LtlFiles.Where(f => !f.isDeleted).ToListAsync();
@@ -76,7 +74,7 @@ namespace ltl_cloudstorage.Controllers
 			return Ok(files);
 		}
 
-		[HttpGet("file/{uniqueId}")]
+		[HttpGet("{uniqueId}")]
 		public async Task<IActionResult> GetFileByUniqueId(string uniqueId)
 		{
 			LtlFile file = await _storageService.SearchFileByUniqueIdAsync(uniqueId);
@@ -90,7 +88,7 @@ namespace ltl_cloudstorage.Controllers
 		// Large file ref: https://stackoverflow.com/questions/62502286/uploading-and-downloading-large-files-in-asp-net-core-3-1
 		[RequestSizeLimit(MaxFileSize)]
 		[RequestFormLimits(MultipartBodyLengthLimit = MaxFileSize)]
-        [HttpPost("file")]
+        [HttpPost]
         public async Task<IActionResult> UploadFile(IFormFile file)
         {
             long size = file.Length;
@@ -106,12 +104,6 @@ namespace ltl_cloudstorage.Controllers
 
             return CreatedAtAction(nameof(UploadFile), new { file=dbFile});
         }
-
-		[HttpGet("test")]
-		public async Task<IActionResult> Test()
-		{
-			return Ok(new {test="hi"});
-		}
 	}
 }
 
