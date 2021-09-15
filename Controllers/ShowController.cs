@@ -104,7 +104,7 @@ namespace ltl_cloudstorage.Controllers
 			if(dbFile == null)
 				return BadRequest();
 
-            return CreatedAtAction(nameof(UploadFile), new { size, fileName = file.FileName });
+            return CreatedAtAction(nameof(UploadFile), new { file=dbFile});
         }
 
 		[HttpGet("test")]
