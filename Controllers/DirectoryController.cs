@@ -35,10 +35,8 @@ namespace ltl_cloudstorage.Controllers
 			if(!isExitsInUserDirs) return NotFound();
 
 			LtlDirectory directory = await _context.LtlDirectories.FindAsync(id);
-			List<LtlDirectory> subDirectories = new List<LtlDirectory>();
-			await _storageService.GetSubDirectoriesByIdAsync(id, subDirectories);
 
-			return Ok(new {directory, subDirectories});
+			return Ok(new {directory});
 		}
 		[HttpPost]
 		public async Task<IActionResult> Create([Bind("Name","ParentDirId")]LtlDirectory directory)

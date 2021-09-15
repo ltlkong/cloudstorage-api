@@ -38,6 +38,6 @@ namespace ltl_cloudstorage.Models
         [ForeignKey("Directory")]
         public int DirectoryId { get; set; }
         [JsonIgnore]
-        public LtlDirectory Directory { get; set; }
+        public virtual LtlDirectory Directory { get; set; }
     }
 }

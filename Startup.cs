@@ -17,6 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.EntityFrameworkCore.Proxies;
 
 namespace ltl_cloudstorage
 {
@@ -82,7 +83,9 @@ namespace ltl_cloudstorage
             });
 
             services.AddDbContext<CSDbContext>(options => {
-                options.UseMySQL(Configuration.GetConnectionString("Default"));
+                options
+				.UseLazyLoadingProxies()
+				.UseMySQL(Configuration.GetConnectionString("Default"));
             });
 
             services.AddSingleton(new JwtService(Configuration.GetValue<string>("JwtSigninKey")));

@@ -27,8 +27,8 @@ namespace ltl_cloudstorage.Controllers
             //Get user
             int userId = Int32.Parse(securityToken.Issuer);
    
-            User user = _context.Users.Include(user => user.Roles).Include(user => user.Membership)
-                .FirstOrDefault(user => user.Id==userId);            
+            User user = _context.Users
+                .Find(userId);            
 
             return user;
         }

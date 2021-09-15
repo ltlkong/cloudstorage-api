@@ -12,9 +12,9 @@ namespace ltl_cloudstorage.Services
     public partial class StorageService : BaseService
     {
         private readonly string _contextStoragePath = System.IO.Directory.GetCurrentDirectory() + "/Storage";
+
         public StorageService(CSDbContext context) : base(context)
-        {
-        }
+        {}
 
         public async Task<LtlFile> StoreAsync(IFormFile file, int UserId, int? directoryId)
         {
@@ -36,6 +36,7 @@ namespace ltl_cloudstorage.Services
 
 			return dbFile;
         }
+
         public async Task<LtlFile> GetFileByIdAsync(int id)
         {
             LtlFile file = await _context.LtlFiles.FindAsync(id);
@@ -45,17 +46,20 @@ namespace ltl_cloudstorage.Services
 
 			return null;
         }
+
         public async Task<ICollection<LtlFile>> SearchFilesByNameAsync(string name)
         {
             List<LtlFile> files = await _context.LtlFiles
-                .Where(f => f.Name.ToLower().Contains(name.ToLower()) && !f.isDeleted).ToListAsync();
+                .Where(f => f.Name.ToLower().Contains(name.ToLower()) && !f.isDeleted)
+				.ToListAsync();
 
             return files;
         }
 
 		public async Task<LtlFile> SearchFileByUniqueIdAsync(string uniqueId)
 		{
-			LtlFile file = await _context.LtlFiles.SingleOrDefaultAsync(f => f.UniqueId.Equals(uniqueId) && !f.isDeleted);
+			LtlFile file = await _context.LtlFiles
+				.SingleOrDefaultAsync(f => f.UniqueId.Equals(uniqueId) && !f.isDeleted);
 
 			return file;
 		}
@@ -78,30 +82,32 @@ namespace ltl_cloudstorage.Services
 
             return files;
         }
+
         public async Task<ICollection<LtlFile>> GetFilesByUserIdAsync(int id)
         {
             List<LtlDirectory> directories = (await GetDirectoriesByUserIdAsync(id)).ToList();
             List<LtlFile> files = new List<LtlFile>();
 
             foreach(LtlDirectory directory in directories)
-            {
-                files.AddRange(await GetFilesByDirectoryIdAsync(directory.Id));
-            }
+                files.AddRange(directory.Files);
 
             return files;
         }
+
         public string GetFileType(string fileName)
         {
             string mimeType = MimeMapping.MimeUtility.GetMimeMapping(fileName);
 
             return mimeType;
         }
+
         public async Task<Byte[]> GetFileBytesAsync(string filePath)
         {
-            Byte[] fileBytes = await System.IO.File.ReadAllBytesAsync(FullPath(filePath));
+            Byte[] fileBytes = await File.ReadAllBytesAsync(FullPath(filePath));
 
             return fileBytes;
         }
+
 		public async Task<bool>  UpdateFileAsync(LtlFile file)
 		{
 			try
@@ -235,22 +241,6 @@ namespace ltl_cloudstorage.Services
 
             return defaultDirectory;
         }
-
-		public async Task GetSubDirectoriesByIdAsync(int id, List<LtlDirectory> subDirectories)
-		{
-			LtlDirectory directory = await _context.LtlDirectories
-				.Include(dir => dir.ChildDirs)
-				.FirstOrDefaultAsync(dir => dir.Id==id);
-			subDirectories.AddRange(directory.ChildDirs);
-
-			if(directory.ChildDirs.Count == 0)
-				return;
-
-			foreach(LtlDirectory dir in directory.ChildDirs)
-			{
-				await GetSubDirectoriesByIdAsync(dir.Id, subDirectories);
-			}
-		}
 
 		public async Task<bool> CheckIsUserDirectoryAsync(int directoryId, int userId)
 		{

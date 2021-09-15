@@ -30,7 +30,7 @@ namespace ltl_cloudstorage.Models
         public DateTime CreatedAt { get; set; }
         [Required]
         public DateTime LastLoginAt { get; set; }
-        public Membership Membership { get; set; }
+        public virtual Membership Membership { get; set; }
         public int? MembershipId { get; set; }
         public virtual ICollection<Role> Roles { get; set; }
         public User()
@@ -54,7 +54,7 @@ namespace ltl_cloudstorage.Models
         [Required]
         public DateTime UpdatedAt { get; set; }
         [JsonIgnore]
-        public User User { get; set; }
+        public virtual User User { get; set; }
         public virtual ICollection<LtlDirectory> LtlDirectories { get; set; }
         public UserInfo()
         {
