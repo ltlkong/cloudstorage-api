@@ -30,7 +30,7 @@ namespace ltl_cloudstorage.Controllers.Show
 
 			ICollection<LtlFile> files = new List<LtlFile>();
 
-			switch(type)
+			switch(type.ToLower())
 			{
 				case "name":
 					files = await _storageService.SearchFilesByNameAsync(value);
