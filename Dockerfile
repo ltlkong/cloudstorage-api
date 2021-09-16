@@ -7,16 +7,15 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
-COPY ["ltl-webdev.csproj", "."]
-RUN dotnet restore "./ltl-webdev.csproj"
+COPY ["ltl-cloudstorage.csproj", "."]
+RUN dotnet restore "./ltl-cloudstorage.csproj"
 COPY . .
-WORKDIR "/src/."
-RUN dotnet build "ltl-webdev.csproj" -c Release -o /app/build
+RUN dotnet build "ltl-cloudstorage.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "ltl-webdev.csproj" -c Release -o /app/publish
+RUN dotnet publish "ltl-cloudstorage.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "ltl-webdev.dll"]
+ENTRYPOINT ["dotnet", "ltl-cloudstorage.dll"]
