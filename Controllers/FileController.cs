@@ -25,10 +25,11 @@ namespace ltl_cloudstorage.Controllers
 		public async Task<IActionResult> GetBy(int id)
 		{
 			bool isExitsInUserFiles = await _storageService.CheckIsUserFileAsync(id, GetCurrentUser().Id);
-			LtlFile file = await _storageService.GetFileByIdAsync(id);
 
 			if(!isExitsInUserFiles)
 				return NotFound();
+			
+			LtlFile file = await _storageService.GetFileByIdAsync(id);
 
 			return Ok(file);
 		}
@@ -53,7 +54,8 @@ namespace ltl_cloudstorage.Controllers
                     await _storageService.StoreAsync(file, GetCurrentUser().Id, directoryId);
 
                 return CreatedAtAction(nameof(Upload), new { size, fileName = file.FileName });
-            }catch
+            }
+			catch
             {
                 return BadRequest();
             }    

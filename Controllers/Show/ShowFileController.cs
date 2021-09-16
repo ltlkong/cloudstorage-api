@@ -17,7 +17,8 @@ namespace ltl_cloudstorage.Controllers.Show
 	[ApiController]
     public class ShowFileController : ShowController
     {
-		private const long MaxFileSize = 1L * 1024L * 1024L * 1024L;
+		// Only allow 500mb for unregister user
+		private const long MaxFileSize = 536870912L;
 
         public ShowFileController(CSDbContext context, StorageService storageService) : base(context, storageService){
    		}

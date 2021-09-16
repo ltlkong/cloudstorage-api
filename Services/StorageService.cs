@@ -86,11 +86,25 @@ namespace ltl_cloudstorage.Services
 
         public async Task<ICollection<LtlFile>> GetFilesByDirectoryIdAsync(int id)
         {
-            List<LtlFile> files = await _context.LtlFiles
-                .Where(f => f.DirectoryId == id && !f.isDeleted).ToListAsync();
+			LtlDirectory directory = await _context.LtlDirectories.FindAsync(id);
+            List<LtlFile> files = new List<LtlFile>();
+
+			await getFilesByDirectoryAsync(directory, files);
 
             return files;
         }
+
+		private async Task getFilesByDirectoryAsync(LtlDirectory directory,List<LtlFile> files)
+		{
+			files.AddRange(directory.Files);
+			ICollection<LtlDirectory> subDirectories = directory.ChildDirs;
+
+			foreach(var dir in subDirectories)
+				await getFilesByDirectoryAsync(dir, files);
+
+			return;
+		}
+		
 
         public async Task<ICollection<LtlFile>> GetFilesByUserIdAsync(int id)
         {
@@ -259,6 +273,19 @@ namespace ltl_cloudstorage.Services
 				return true;
 
 			return false;
+		}
+
+		public async Task DeleteDirectoryByIdAsync(int id)
+		{
+			LtlDirectory directory = await _context.LtlDirectories.FindAsync(id);
+			ICollection<LtlFile> files = await GetFilesByDirectoryIdAsync(id);
+
+			foreach(var file in files)
+				await SoftDeleteFileByIdAsync(file.Id);
+			
+			_context.LtlDirectories.Remove(directory);
+
+			await _context.SaveChangesAsync();
 		}
     }
 }

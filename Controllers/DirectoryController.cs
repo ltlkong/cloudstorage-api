@@ -59,6 +59,29 @@ namespace ltl_cloudstorage.Controllers
 
 			return Ok(new {msg="Updated", directory});
 		}
+		[HttpDelete("{id}")]
+		public async Task<IActionResult> Delete(int id)
+		{
+			bool isUserDir = await _storageService.CheckIsUserDirectoryAsync(id, GetCurrentUser().Id);
+
+			if(!isUserDir)
+				return NotFound();
+
+			try
+			{
+				await _storageService.DeleteDirectoryByIdAsync(id);
+			}
+			catch
+			{
+				return BadRequest();
+			}
+
+			return Ok(new {msg="Deleted successfully"});
+			
+			
+
+		}
+		
 
     }
 }
