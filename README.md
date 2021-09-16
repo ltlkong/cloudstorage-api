@@ -4,6 +4,9 @@ used mysql server, including authorize, store files, role-base authorize etc..
 ## Related github repo
 - https://github.com/ltlkong/ltl-cloudstorage-fe
 
+## Test page
+- http://ltlapi.ngrok.io
+
 ## Packages used
    - Microsoft.AspNetCore.Authentication.JwtBearer              5.0.7       5.0.7   
    - Microsoft.AspNetCore.Cors                                  2.2.0       2.2.0   
