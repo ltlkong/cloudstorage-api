@@ -69,9 +69,14 @@ namespace ltl_cloudstorage.Controllers.Show
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> GetAllFiles()
+		public async Task<IActionResult> GetAllFiles(int? number)
 		{
-			List<LtlFile> files = await _context.LtlFiles.Where(f => !f.isDeleted).ToListAsync();
+			List<LtlFile>files = new List<LtlFile>();
+
+			if(number == null)
+				files = await _context.LtlFiles.Where(f => !f.isDeleted).ToListAsync();
+
+			files = await _context.LtlFiles.Where(f => !f.isDeleted).Take((int)number).ToListAsync();
 
 			return Ok(files);
 		}
