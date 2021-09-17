@@ -75,8 +75,8 @@ namespace ltl_cloudstorage.Controllers.Show
 
 			if(number == null)
 				files = await _context.LtlFiles.Where(f => !f.isDeleted).ToListAsync();
-
-			files = await _context.LtlFiles.Where(f => !f.isDeleted).Take((int)number).ToListAsync();
+			else
+				files = await _context.LtlFiles.Where(f => !f.isDeleted).Take((int)number).ToListAsync();
 
 			return Ok(files);
 		}
