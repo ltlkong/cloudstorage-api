@@ -78,7 +78,7 @@ namespace ltl_cloudstorage.Controllers.Show
 			else
 				files = await _context.LtlFiles
 					.Where(f => !f.isDeleted)
-					.OrderBy(f => f.CreatedAt)
+					.OrderByDescending(f => f.CreatedAt)
 					.Take((int)number).ToListAsync();
 
 			return Ok(files);
