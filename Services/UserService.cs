@@ -21,12 +21,11 @@ namespace ltl_cloudstorage.Services
 
             return users;
         }
-        public async Task CreateInfoAsync(int userId ,UserDto userDto)
+        public async Task CreateInfoAsync(int userId)
         {
             Profile profile = new Profile()
             {
                 Id=userId,
-                Introduction = userDto.Introduction
             };
 
             //Default values
@@ -40,7 +39,7 @@ namespace ltl_cloudstorage.Services
             prop = WordFirstCharToUpper(prop);
             string[] editableProps =
             {
-                "Description", "Email", "Name", "Introduction","DisplayName"
+                 "Email", "Name", "Introduction","DisplayName","Avatar"
             };
            
             Profile profile = await _context.Profiles.FindAsync(currentUser.Id);

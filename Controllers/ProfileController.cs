@@ -1,5 +1,6 @@
 ﻿using ltl_cloudstorage.Dtos;
 using ltl_cloudstorage.Models;
+using Microsoft.EntityFrameworkCore;
 using ltl_cloudstorage.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -30,16 +31,33 @@ namespace ltl_cloudstorage.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(UserDto userDto)
         {
+						Profile profile = await _context.Profiles.FindAsync(GetCurrentUser().Id);
+
             try
             {
-                await _userService.CreateInfoAsync(GetCurrentUser().Id,userDto);
+
+								bool haveProfile = profile != null;
+
+								if(haveProfile)
+									return BadRequest(new {msg = "User already have profile"});
+
+                await _userService.CreateInfoAsync(GetCurrentUser().Id);
+
+								profile = await _context.Profiles.FindAsync(GetCurrentUser().Id);
+								User user = await _context.Users.FindAsync(GetCurrentUser().Id);
+								user.Avatar = userDto.Avatar;
+								user.DisplayName = userDto.DisplayName;
+								profile.Introduction = userDto.Introduction;
+
+								_context.Entry(user).State = EntityState.Modified;
+								_context.Entry(profile).State = EntityState.Modified;
+								await _context.SaveChangesAsync();
+
             }
             catch
             {
                 return BadRequest();
             }
-
-            Profile profile = await _context.Profiles.FindAsync(GetCurrentUser().Id);
 
             return CreatedAtAction(nameof(Create),profile);       
         }

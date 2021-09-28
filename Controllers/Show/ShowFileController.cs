@@ -71,17 +71,18 @@ namespace ltl_cloudstorage.Controllers.Show
 		[HttpGet]
 		public async Task<IActionResult> GetAllFiles(int? number)
 		{
-			List<LtlFile>files = new List<LtlFile>();
+			ICollection<LtlFile>publicFiles = await _storageService.GetFilesByUserIdAsync(1);
+			ICollection<LtlFile> files = new List<LtlFile>();
+			int total = publicFiles.Count();
 
 			if(number == null)
-				files = await _context.LtlFiles.Where(f => !f.isDeleted).ToListAsync();
+				files = publicFiles;
 			else
-				files = await _context.LtlFiles
-					.Where(f => !f.isDeleted)
+				files = publicFiles
 					.OrderByDescending(f => f.CreatedAt)
-					.Take((int)number).ToListAsync();
+					.Take((int)number).ToList();
 
-			return Ok(files);
+			return Ok(new { files, total});
 		}
 
 		[HttpGet("{uniqueId}")]
@@ -102,15 +103,15 @@ namespace ltl_cloudstorage.Controllers.Show
         public async Task<IActionResult> UploadFile(IFormFile file)
         {
             long size = file.Length;
-			LtlFile dbFile = null;
+						LtlFile dbFile = null;
 
             if (file.Length > 0)
             {
                 dbFile = await  _storageService.StoreAsync(file, 1, null);
             }
 
-			if(dbFile == null)
-				return BadRequest();
+						if(dbFile == null)
+							return BadRequest();
 
             return CreatedAtAction(nameof(UploadFile), new { file=dbFile});
         }

@@ -112,7 +112,11 @@ namespace ltl_cloudstorage.Services
             List<LtlFile> files = new List<LtlFile>();
 
             foreach(LtlDirectory directory in directories)
-                files.AddRange(directory.Files);
+							foreach(LtlFile file in directory.Files)
+							{
+								if(!file.isDeleted)
+									files.Add(file);
+							}
 
             return files;
         }
