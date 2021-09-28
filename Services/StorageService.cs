@@ -55,12 +55,28 @@ namespace ltl_cloudstorage.Services
 
             return files;
         }
+				
+        public ICollection<LtlFile> SearchFilesByName(string name, ICollection<LtlFile> filesToSearch)
+        {
+            ICollection<LtlFile> files = filesToSearch
+                .Where(f => f.Name.ToLower().Contains(name.ToLower())).ToList();
+
+            return files;
+        }
 
 		public async Task<ICollection<LtlFile>> SearchFileByMimetypeAsync(string type)
 		{
 			List<LtlFile> files = await _context.LtlFiles
 				.Where(f => f.Type.ToLower().Contains(type.ToLower()) && !f.isDeleted)
 				.ToListAsync();
+
+			return files;
+		}
+		
+		public ICollection<LtlFile> SearchFileByMimetype(string type, ICollection<LtlFile> filesToSearch)
+		{
+			List<LtlFile> files = filesToSearch
+				.Where(f => f.Type.ToLower().Contains(type.ToLower())).ToList();
 
 			return files;
 		}

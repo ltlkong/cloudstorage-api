@@ -30,11 +30,12 @@ namespace ltl_cloudstorage.Controllers.Show
 				return BadRequest();
 
 			ICollection<LtlFile> files = new List<LtlFile>();
+			ICollection<LtlFile> publicFiles = await _storageService.GetFilesByUserIdAsync(1);
 
 			switch(type.ToLower())
 			{
 				case "name":
-					files = await _storageService.SearchFilesByNameAsync(value);
+					files = _storageService.SearchFilesByName(value,publicFiles);
 					break;
 				case "id":
 					LtlFile file = await _storageService.SearchFileByUniqueIdAsync(value);
@@ -42,7 +43,7 @@ namespace ltl_cloudstorage.Controllers.Show
 						files.Add(file);
 					break;
 				case "type":
-					files = await _storageService.SearchFileByMimetypeAsync(value);
+					files =_storageService.SearchFileByMimetype(value, publicFiles);
 					break;
 				default:
 					break;
