@@ -78,10 +78,11 @@ namespace ltl_cloudstorage.Controllers
         }
         [Authorize]
         [HttpGet]
-        public IActionResult GetUser()
+        public async Task<IActionResult> GetUser()
         {
             // Get user and information.
             User user = GetCurrentUser();
+						Profile profile= await _context.Profiles.FindAsync(user.Id);
 
             var authUser = new
             {
@@ -89,7 +90,8 @@ namespace ltl_cloudstorage.Controllers
                 displayName=user.DisplayName,
                 roles=user.Roles,
                 avatar=user.Avatar,
-				memberships = user.Memberships
+								memberships = user.Memberships,
+								haveProfile = profile != null
             };
 
             return Ok(new { msg = "Your infomation", user=authUser });
