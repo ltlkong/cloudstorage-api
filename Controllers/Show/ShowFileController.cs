@@ -48,8 +48,6 @@ namespace ltl_cloudstorage.Controllers.Show
 					break;
 			}
 
-			if(files.Count == 0)
-				return NotFound();
 			return Ok(files);
         }
 
