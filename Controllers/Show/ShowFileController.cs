@@ -87,6 +87,9 @@ namespace ltl_cloudstorage.Controllers.Show
 		[HttpGet("{uniqueId}")]
 		public async Task<IActionResult> GetFileByUniqueId(string uniqueId)
 		{
+			if(uniqueId == null)
+				return BadRequest();
+
 			LtlFile file = await _storageService.SearchFileByUniqueIdAsync(uniqueId);
 
 			if(file == null)
