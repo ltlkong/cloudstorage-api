@@ -20,17 +20,17 @@ namespace ltl_cloudstorage.Controllers.Show
 		// Only allow 500mb for unregister user
 		private const long MaxFileSize = 536870912L;
 
-        public ShowFileController(CSDbContext context, StorageService storageService) : base(context, storageService){
+			public ShowFileController(CSDbContext context, StorageService storageService) : base(context, storageService){
    		}
 
-        [HttpGet("search")]
-        public async Task<IActionResult> GetFileBy(string type, string value)
-        {
-			if(String.IsNullOrEmpty(type) || String.IsNullOrEmpty(value))
-				return BadRequest();
+			[HttpGet("search")]
+			public async Task<IActionResult> GetFileBy(string type, string value)
+			{
+				if(String.IsNullOrEmpty(type) || String.IsNullOrEmpty(value))
+					return BadRequest();
 
-			ICollection<LtlFile> files = new List<LtlFile>();
-			ICollection<LtlFile> publicFiles = await _storageService.GetFilesByUserIdAsync(1);
+				ICollection<LtlFile> files = new List<LtlFile>();
+				ICollection<LtlFile> publicFiles = await _storageService.GetFilesByUserIdAsync(1);
 
 			switch(type.ToLower())
 			{
@@ -87,15 +87,12 @@ namespace ltl_cloudstorage.Controllers.Show
 		[HttpGet("{uniqueId}")]
 		public async Task<IActionResult> GetFileByUniqueId(string uniqueId)
 		{
-			if(uniqueId == null)
-				return BadRequest();
-
 			LtlFile file = await _storageService.SearchFileByUniqueIdAsync(uniqueId);
 
 			if(file == null)
 				return NotFound();
 
-			return Ok(file);
+			return Ok(new {msg="success", file});
 		}
 
 		// Large file ref: https://stackoverflow.com/questions/62502286/uploading-and-downloading-large-files-in-asp-net-core-3-1
