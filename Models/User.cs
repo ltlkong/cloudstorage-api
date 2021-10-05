@@ -24,7 +24,7 @@ namespace ltl_cloudstorage.Models
         [JsonIgnore]
         [Required]
         public string PasswordHash { get; set; }
-        [MaxLength(500)]
+        [MaxLength(1000)]
         public string Avatar { get; set; }
         [Required]
         public DateTime CreatedAt { get; set; }
