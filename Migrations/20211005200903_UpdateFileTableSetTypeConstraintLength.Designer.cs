@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ltl_cloudstorage.Models;
 
 namespace ltl_cloudstorage.Migrations
 {
     [DbContext(typeof(CSDbContext))]
-    partial class CSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211005200903_UpdateFileTableSetTypeConstraintLength")]
+    partial class UpdateFileTableSetTypeConstraintLength
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
