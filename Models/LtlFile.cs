@@ -31,7 +31,7 @@ namespace ltl_cloudstorage.Models
         // Context is where the Storage folder located
 		[JsonIgnore]
         public string Path { get; set; }
-        [MaxLength(40)]
+        [MaxLength(100)]
         public string Type { get; set; }
 		[JsonIgnore]
 		public bool isDeleted { get; set;}

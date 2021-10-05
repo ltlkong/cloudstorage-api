@@ -45,6 +45,8 @@ namespace ltl_cloudstorage.Controllers
 
 								if(isUserDir)
 									files=await _storageService.GetFilesByDirectoryIdAsync(Int32.Parse(value));
+
+								files= new List<LtlFile>();
 								break;
 							default:
 								files = await _storageService.GetFilesByUserIdAsync(GetCurrentUser().Id);
