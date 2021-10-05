@@ -199,6 +199,16 @@ namespace ltl_cloudstorage.Services
 			return isSuccess;
 		}
 
+		public async Task DeleteAllUselessFiles() {
+			ICollection<LtlFile> files = (await _context.LtlFiles.ToListAsync())
+				.Where(file => file.isDeleted ||  (DateTime.Compare(file.CreatedAt.AddDays(4), DateTime.Now)<0 && file.DirectoryId==1)).ToList();
+
+			foreach(var file in files) 
+			{
+				await HardDeleteFileByIdAsync(file.Id);
+			}
+		}
+
         #region helpers
         private string GenerateGuid()
         {

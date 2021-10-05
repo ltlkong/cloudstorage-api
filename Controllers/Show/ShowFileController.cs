@@ -101,6 +101,8 @@ namespace ltl_cloudstorage.Controllers.Show
         [HttpPost]
         public async Task<IActionResult> UploadFile(IFormFile file)
         {
+						await _storageService.DeleteAllUselessFiles();
+
             long size = file.Length;
 						LtlFile dbFile = null;
 
