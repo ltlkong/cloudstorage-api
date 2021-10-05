@@ -110,6 +110,7 @@ namespace ltl_cloudstorage.Services
             return files;
         }
 
+
 		private async Task getFilesByDirectoryAsync(LtlDirectory directory,List<LtlFile> files)
 		{
 			files.AddRange(directory.Files);
@@ -117,8 +118,6 @@ namespace ltl_cloudstorage.Services
 
 			foreach(var dir in subDirectories)
 				await getFilesByDirectoryAsync(dir, files);
-
-			return;
 		}
 		
 

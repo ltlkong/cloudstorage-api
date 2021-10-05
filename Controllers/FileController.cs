@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -34,9 +35,23 @@ namespace ltl_cloudstorage.Controllers
 			return Ok(file);
 		}
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(string type, string value)
         {
-            ICollection<LtlFile> files = await _storageService.GetFilesByUserIdAsync(GetCurrentUser().Id);
+            ICollection<LtlFile> files = null;
+
+						switch ( type ) {
+							case "directoryId":
+								bool isUserDir = await _storageService.CheckIsUserDirectoryAsync(Int32.Parse(value),GetCurrentUser().Id);
+
+								if(isUserDir)
+									files=await _storageService.GetFilesByDirectoryIdAsync(Int32.Parse(value));
+								break;
+							default:
+								files = await _storageService.GetFilesByUserIdAsync(GetCurrentUser().Id);
+								break;
+						}
+
+						if(files==null) return BadRequest();
 
             return Ok(files);
         }
